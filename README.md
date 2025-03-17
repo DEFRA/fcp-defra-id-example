@@ -11,9 +11,9 @@ Optional:
 - Kubernetes
 - Helm
 
-## Running the application
+## Running the srclication
 
-The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
+The srclication is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
 
 - A Helm chart is provided for production deployments to Kubernetes.
 
@@ -21,8 +21,8 @@ The application is designed to run in containerised environments, using Docker C
 
 Container images are built using Docker Compose, with the same images used to run the service with either Docker Compose or Kubernetes.
 
-When using the Docker Compose files in development the local `app` folder will
-be mounted on top of the `app` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
+When using the Docker Compose files in development the local `src` folder will
+be mounted on top of the `src` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
 
 
 By default, the start script will build (or rebuild) images so there will

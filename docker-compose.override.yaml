@@ -11,7 +11,7 @@ services:
       - "3000:3000"
       - "9229:9229"
     volumes:
-      - ./app:/home/node/app
+      - ./src:/home/node/src
       - ./package.json:/home/node/package.json
     networks:
       - fcp-defra-id-example
