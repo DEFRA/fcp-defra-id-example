@@ -16,7 +16,19 @@ services:
     networks:
       - fcp-defra-id-example
 
+  redis:
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --dir /data --save 5 1
+    networks:
+      - fcp-defra-id-example
+
 networks:
   fcp-defra-id-example:
     name: fcp-defra-id-example
     driver: bridge
+
+volumes:
+  redis_data:
