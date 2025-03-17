@@ -1,0 +1,46 @@
+# Required values to support CI pipeline
+environment: production
+environmentCode:
+name: ffc-template-node
+namespace: ffc-demo
+workstream: ffc-demo
+image: ffc-template-node
+
+appInsights:
+  connectionString:
+
+labels: {}
+
+containerConfigMap: {}
+
+containerSecret: {}
+
+deployment: {}
+
+port: &port 3000
+
+container:
+  resourceTier: M
+  port: *port
+
+livenessProbe:
+  path: /healthz
+  port: *port
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+readinessProbe:
+  path: /healthy
+  port: *port
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+workloadIdentity: true
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID

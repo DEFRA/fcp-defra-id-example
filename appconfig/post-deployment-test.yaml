@@ -1,0 +1,39 @@
+
+environments:
+  dev:
+    dev01:
+      image: hello-world
+      command: ["bin/sh", "-c", "echo Hello World"]
+      tests-path: "integration/"
+      report-dir: "test-output/"
+      env-variables:
+        env-url: dev01-demo-apply-web
+        any-key: anyValue
+
+    dev-integration:
+      image: hello-world
+      command: [""]
+      tests-path: "integration/"
+      env-variables:
+        env-url: devIntegration-demo-apply-web
+        any-key: anyValue
+        another-key: extra-value
+
+  test:
+    test-acceptance:
+      image: hello-world
+      command: [""]
+      tests-path: "integration/"
+      result-path: "reports/"
+      env-variables:
+        env-url: testAcceptance-demo-apply-web
+        any-key: anyValue
+
+    test-02:
+      image: hello-world
+      command: [""]
+      tests-path: "integration/"
+      result-path: "reports/"
+      env-variables:
+        env-url: test02-demo-apply-web
+        any-key: anyValue

@@ -1,0 +1,10 @@
+resources:
+  identity: ffc-template-node
+  # postgreSql:
+  #   name: ffc-template-node
+  #   extensions:
+  #     - name: uuid-ossp
+  # queues:
+  #   - name: ffc-template-node
+  #     role: receiver
+
