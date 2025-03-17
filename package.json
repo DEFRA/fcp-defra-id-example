@@ -15,7 +15,9 @@
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
   },
   "author": "Defra",
-  "contributors": [],
+  "contributors": [
+    "John Watson"
+  ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@hapi/bell": "13.1.0",
