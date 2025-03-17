@@ -1,5 +1,6 @@
 import Hapi from '@hapi/hapi'
 import Joi from 'joi'
+import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import { registerPlugins } from './plugins/index.js'
 import config from './config.js'
 
@@ -16,7 +17,19 @@ async function createServer () {
     },
     router: {
       stripTrailingSlash: true
-    }
+    },
+    cache: [{
+      name: config.get('cache.name'),
+      provider: {
+        constructor: CatboxRedis,
+        options: {
+          host: config.get('cache.host'),
+          port: config.get('cache.port'),
+          password: config.get('cache.password'),
+          tls: config.get('cache.tls')
+        }
+      }
+    }]
   })
 
   server.validator(Joi)

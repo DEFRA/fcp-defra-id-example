@@ -1,5 +1,3 @@
-import { setup } from './insights.js'
-import 'log-timestamp'
 import { createServer } from './server.js'
 
 const init = async () => {
@@ -13,5 +11,4 @@ process.on('unhandledRejection', (err) => {
   process.exit(1)
 })
 
-setup()
 init()

@@ -17,7 +17,7 @@ services:
       DEFRA_ID_POLICY: ${DEFRA_ID_POLICY}
       DEFRA_ID_REDIRECT_URL: ${DEFRA_ID_REDIRECT_URL:-http://localhost:3000/auth/sign-in-oidc}
       DEFRA_ID_POST_LOGOUT_REDIRECT_URL: ${DEFRA_ID_POST_LOGOUT_REDIRECT_URL:-http://localhost:3000/auth/sign-out-oidc}
-      REDIS_HOST: fcp-defra-id-example-redis
+      REDIS_HOST: redis
 
   redis:
     image: redis
