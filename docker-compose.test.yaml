@@ -2,11 +2,11 @@
 # that test output is saved to the host
 
 services:
-  ffc-template-node:
+  fcp-defra-id-example:
     build:
       target: development
-    image: ffc-template-node-development
-    container_name: ffc-template-node-test
+    image: fcp-defra-id-example-development
+    container_name: fcp-defra-id-example-test
     command: npm run test
     volumes:
       - ./app:/home/node/app

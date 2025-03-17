@@ -1,3 +1,0 @@
-{{- include "ffc-helm-library.deployment" (list . "ffc-template-node.deployment") -}}
-{{- define "ffc-template-node.deployment" -}}
-{{- end -}}
