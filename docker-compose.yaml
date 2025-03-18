@@ -15,9 +15,10 @@ services:
       DEFRA_ID_CLIENT_SECRET: ${DEFRA_ID_CLIENT_SECRET}
       DEFRA_ID_SERVICE_ID: ${DEFRA_ID_SERVICE_ID}
       DEFRA_ID_POLICY: ${DEFRA_ID_POLICY}
-      DEFRA_ID_REDIRECT_URL: ${DEFRA_ID_REDIRECT_URL:-http://localhost:3000/auth/sign-in-oidc}
-      DEFRA_ID_POST_LOGOUT_REDIRECT_URL: ${DEFRA_ID_POST_LOGOUT_REDIRECT_URL:-http://localhost:3000/auth/sign-out-oidc}
+      DEFRA_ID_REDIRECT_URL: http://localhost:3010/sign-in-oidc
+      DEFRA_ID_SIGN_OUT_REDIRECT_URL: http://localhost:3010/sign-out-oidc
       REDIS_HOST: redis
+      COOKIE_PASSWORD: this-is-a-secret-that-must-be-at-least-32-characters
 
   redis:
     image: redis

@@ -24,7 +24,7 @@ const config = convict({
   port: {
     doc: 'The port to bind.',
     format: 'port',
-    default: 3000,
+    default: 3010,
     env: 'PORT',
     arg: 'port'
   },
@@ -56,6 +56,87 @@ const config = convict({
       doc: 'True if the Redis cache is using TLS.',
       format: Object,
       default: process.env.REDIS_TLS === 'true' ? {} : undefined
+    },
+    segment: {
+      doc: 'The cache segment.',
+      format: String,
+      default: 'session'
+    },
+    ttl: {
+      doc: 'The cache TTL.',
+      format: Number,
+      default: 1000 * 60 * 60 * 24,
+      env: 'REDIS_TTL'
+    }
+  },
+  defraId: {
+    enabled: {
+      doc: 'True if Defra Identity is enabled.',
+      format: Boolean,
+      default: true,
+      env: 'DEFRA_ID_ENABLED'
+    },
+    signOutEnabled: {
+      doc: 'True if Defra Identity sign out is enabled.',
+      format: Boolean,
+      default: true,
+      env: 'DEFRA_ID_SIGN_OUT_ENABLED'
+    },
+    wellKnownUrl: {
+      doc: 'The Defra Identity well known URL.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_WELL_KNOWN_URL'
+    },
+    clientId: {
+      doc: 'The Defra Identity client ID.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_CLIENT_ID'
+    },
+    clientSecret: {
+      doc: 'The Defra Identity client secret.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_CLIENT_SECRET'
+    },
+    serviceId: {
+      doc: 'The Defra Identity service ID.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_SERVICE_ID'
+    },
+    policy: {
+      doc: 'The Defra Identity policy.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_POLICY'
+    },
+    redirectUrl: {
+      doc: 'The Defra Identity redirect URl.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_REDIRECT_URL'
+    },
+    signOutRedirectUrl: {
+      doc: 'The Defra Identity sign out redirect URl.',
+      format: String,
+      default: null,
+      env: 'DEFRA_ID_SIGN_OUT_REDIRECT_URL'
+    },
+    refreshTokens: {
+      doc: 'True if Defra Identity refresh tokens are enabled.',
+      format: Boolean,
+      default: false,
+      env: 'DEFRA_ID_REFRESH_TOKENS'
+    }
+  },
+  cookie: {
+    password: {
+      doc: 'The cookie password.',
+      format: String,
+      default: null,
+      env: 'COOKIE_PASSWORD'
     }
   }
 })

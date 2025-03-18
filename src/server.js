@@ -32,7 +32,14 @@ async function createServer () {
     }]
   })
 
+  server.app.cache = server.cache({
+    cache: config.get('cache.name'),
+    segment: config.get('cache.segment'),
+    expiresIn: config.get('cache.ttl')
+  })
+
   server.validator(Joi)
+
   await registerPlugins(server)
 
   return server
