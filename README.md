@@ -87,7 +87,13 @@ The application contains two authentication strategies:
 1. OAuth2.0 orchestrated by [`@hapi/bell`](https://github.com/hapijs/bell)
 1. Cookie-based session management orchestrated by [`@hapi/cookie`](https://github.com/hapijs/cookie)
 
-The OAuth2.0 strategy is used to authenticate users with Defra Identity. Once authenticated, the user is redirected to the application with an access token. This token is used to retrieve user information and permissions from Siti Agri.
+The OAuth2.0 strategy is used to authenticate users with Defra Identity. Once authenticated, the user is redirected to the application with an access token. 
+
+`@hapi/bell` simplifies the OAuth2.0 process by handling the OAuth2.0 flow and token exchange with Defra Identity including validation of state and nonce to prevent CSRF  and token replay attacks.
+
+The token is validated against the Defra Identity public key to ensure it is valid.
+
+This token is used to retrieve user information and permissions from Siti Agri.
 
 > Within this example, the data is mocked.  In a real-world scenario, the data would be retrieved from Siti Agri via KITS/Version 1 APIs.
 
@@ -99,6 +105,14 @@ As part of the cookie authentication strategy, the application will check if the
 If the token has expired, it will be refreshed automatically if the `DEFRA_ID_REFRESH_TOKENS` environment variable is set to `true`.
 
 The session will end when the user signs out or the browser is closed.  This is to align with the behaviour of other farming services.
+
+### Sign out
+
+When a user signs out, the application will redirect the user to the Defra Identity sign out endpoint.  Once the user has signed out, they will be redirected back to the application.
+
+The application will then clear the session and the user will be signed out.
+
+As sign out is not a feature supported by `@hapi/bell`, a module has been created to ensure the redirect Url is correctly set and appropriate state validation is performed to prevent CSRF attacks.
 
 ## Licence
 
