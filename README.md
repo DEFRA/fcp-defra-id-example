@@ -101,10 +101,17 @@ Once the user is authenticated, the application creates a session cookie. This c
 
 The OAuth2.0 token and other session data is stored in Redis and can be used to retrieve user information and permissions from downstream services.
 
-As part of the cookie authentication strategy, the application will check if the token has expired.  
-If the token has expired, it will be refreshed automatically if the `DEFRA_ID_REFRESH_TOKENS` environment variable is set to `true`.
-
 The session will end when the user signs out or the browser is closed.  This is to align with the behaviour of other farming services.
+
+### Redirections
+
+When an unauthenticated user accesses a route that requires authentication, the application will redirect the user to the Defra Identity sign in endpoint. 
+
+The original path is stored in Redis session storage and is retrieved once the user has signed in.  The user is then redirected back to the original path.
+
+[`@hapi/yar`](https://github.com/hapijs/yar) is used to store the original path in the session.  Like `@hapi/cookie`, `@hapi/yar` is a cookie-based session management plugin, but is used for unauthenticated users.
+
+In this simple example, only the path is stored, ignoring any query or payload data.
 
 ### Sign out
 
@@ -113,6 +120,13 @@ When a user signs out, the application will redirect the user to the Defra Ident
 The application will then clear the session and the user will be signed out.
 
 As sign out is not a feature supported by `@hapi/bell`, a module has been created to ensure the redirect Url is correctly set and appropriate state validation is performed to prevent CSRF attacks.
+
+### Refreshing tokens
+
+As part of the cookie authentication strategy, the application will check if the token has expired.  
+If the token has expired, it will be refreshed automatically if the `DEFRA_ID_REFRESH_TOKENS` environment variable is set to `true`.
+
+As refreshing tokens is not a feature supported by `@hapi/bell`, a module has been created to handle the token refresh process.
 
 ### Protecting routes
 
