@@ -48,6 +48,7 @@ const plugin = {
           path: '/',
           isSecure: !config.get('isDev')
         },
+        redirectTo: '/auth/sign-in',
         validate: async function (request, session) {
           // TODO: handle expired session
           const userSession = await request.server.app.cache.get(session.sessionId)
