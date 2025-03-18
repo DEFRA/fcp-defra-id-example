@@ -39,9 +39,7 @@ const plugin = {
         return {}
       }
       const auth = await request.server.app.cache.get(request.auth?.credentials?.sessionId)
-      return {
-        auth
-      }
+      return { auth }
     }
   }
 }
