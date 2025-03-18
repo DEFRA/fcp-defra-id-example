@@ -34,12 +34,21 @@ const plugin = {
         clientId: config.get('defraId.clientId'),
         clientSecret: config.get('defraId.clientSecret'),
         providerParams: function (request) {
-          return {
-            forceReselection: request.path === '/auth/switch-organisation',
+          const params = {
             serviceId: config.get('defraId.serviceId'),
             p: config.get('defraId.policy'),
             response_mode: 'query'
           }
+
+          if (request.path === '/auth/switch-organisation') {
+            params.forceReselection = true
+          }
+
+          if (request.query.organisationId) {
+            params.relationshipId = request.query.organisationId
+          }
+
+          return params
         },
         password: config.get('cookie.password'),
         isSecure: !config.get('isDev')
