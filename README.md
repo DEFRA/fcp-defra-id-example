@@ -1,50 +1,24 @@
 # FCP Defra Identity example
 
-> NOTE: This is a work in progress and only contains a basic authentication example.
-
-This is an example service that demonstrates how to use the Defra Identity service to authenticate users.
+This is an example service that demonstrates how to use the Defra Identity service to authenticate users within the Farming and Countryside programme (FCP).
 
 ## Prerequisites
 
 - Docker
 - Docker Compose
+- Defra Identity service credentials
 
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
-
-- A Helm chart is provided for production deployments to Kubernetes.
-
-### Build container image
-
-Container images are built using Docker Compose, with the same images used to run the service with either Docker Compose or Kubernetes.
-
-When using the Docker Compose files in development the local `src` folder will
-be mounted on top of the `src` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
-
-
-By default, the start script will build (or rebuild) images so there will
-rarely be a need to build images manually. However, this can be achieved
-through the Docker Compose
-[build](https://docs.docker.com/compose/reference/build/) command:
-
-```
-# Build container images
-docker compose build
-```
 
 ### Start
 
 Use Docker Compose to run service locally.
 
 ```
-docker compose up
+docker compose up --build
 ```
-
-## Test structure
-
-The tests have been structured into subfolders of `./test` as per the
-[Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
 
 ### Running tests
 
@@ -63,10 +37,6 @@ scripts/test
 # Run tests with file watch
 scripts/test -w
 ```
-
-## CI pipeline
-
-This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
 
 ## Licence
 
