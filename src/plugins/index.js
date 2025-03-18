@@ -8,6 +8,7 @@ import logging from './logging.js'
 import errors from './errors.js'
 import views from './views.js'
 import router from './router.js'
+import sso from './sso.js'
 
 async function registerPlugins (server) {
   const plugins = [
@@ -20,7 +21,8 @@ async function registerPlugins (server) {
     logging,
     errors,
     views,
-    router
+    router,
+    sso
   ]
 
   await server.register(plugins)

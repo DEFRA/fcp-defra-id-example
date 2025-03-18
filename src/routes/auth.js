@@ -18,6 +18,7 @@ const routes = [{
   handler: async function (request, h) {
     // TODO: handle expiry
     if (request.auth.isAuthenticated) {
+      // TODO: verify token against public key
       const { profile, token, refreshToken } = request.auth.credentials
       const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
       await request.server.app.cache.set(profile.sessionId, {
@@ -48,12 +49,14 @@ const routes = [{
   }
 }, {
   method: 'GET',
-  path: '/auth/switch-organisation',
+  path: '/auth/organisation',
   options: {
     auth: 'defra-id'
   },
   handler: async function (request, h) {
-    return h.redirect('/home')
+    const redirect = request.yar.get('redirect') ?? '/home'
+    request.yar.clear('redirect')
+    return h.redirect(redirect)
   }
 }]
 

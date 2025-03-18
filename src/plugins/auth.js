@@ -45,7 +45,7 @@ const plugin = {
           }
 
           // If user intends to switch organisation, force Defra Identity to display the organisation selection screen
-          if (request.path === '/auth/switch-organisation') {
+          if (request.path === '/auth/organisation') {
             params.forceReselection = true
           }
 
