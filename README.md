@@ -193,6 +193,16 @@ The user is then redirected to their original destination with the appropriate o
 
 > It is important that no route is configured to use a query parameter named `ssoOrgId` to avoid conflicts with the plugin.
 
+### View templates
+
+User session data is passed to the view templates to enable the conditional rendering of content based on the user's permissions.
+
+This is handled by the `view` plugin which adds the `auth` object to the view context.  This object contains the user's permissions and other session data.
+
+The `home` view is an example of this where all session data is displayed.
+
+> In a real-world scenario, the user token data would not be displayed in the view.
+
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
