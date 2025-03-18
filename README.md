@@ -2,6 +2,10 @@
 
 This is an example service that demonstrates how to use the Defra Identity service to authenticate users within the Farming and Countryside programme (FCP).
 
+The patterns used within this example are documented below.  Code comments are also provided to provide extra context.
+
+## Defra Identity
+
 Defra Identity is a service that provides external user authentication and authorisation for Defra services. It is based on the OAuth 2.0 and OpenID Connect standards and is backed by Azure B2C.
 
 Defra Identity supports authentication through a Government Gateway or Rural Payments account.
@@ -13,6 +17,8 @@ FCP services should use Defra Identity with a Rural Payments account. This is be
 Whilst this service focuses on the Rural Payments account and FCP, the patterns within can be applied to other services that use Defra Identity.
 
 The only significant difference is that FCP services must retrieve permissions from Siti Agri as opposed to being provided by Defra Customer.
+
+## Sign in flow
 
 Once a user has been authenticated, a service must retrieve this data from Siti Agri via an API call. A complication of this is that this API cannot retrieve all permissions for an individual, instead it can only retrieve permissions for a specific organisation the person is associated with.
 
