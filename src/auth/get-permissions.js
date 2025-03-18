@@ -9,6 +9,7 @@ async function getPermissions (crn, organisationId, token) {
 
 async function getPersonId (crn, token) {
   // simulate call to RPS API
+  // Only id is needed for mapping roles, but other fields shown for context for what else is available
   // PATH: /person/3337243/summary
   // METHOD: GET
   // HEADERS:
@@ -17,7 +18,27 @@ async function getPersonId (crn, token) {
 
   const mockResponse = {
     _data: {
-      id: '123456'
+      id: '123456',
+      customerReferenceNumber: '1234567890', // crn
+      title: 'Mr',
+      firstName: 'Andrew',
+      lastName: 'Farmer',
+      landline: '01234567890',
+      mobile: '01234567890',
+      email: 'a.farmer@farms.com',
+      address: {
+        address1: 'Address line 1',
+        address2: 'Address line 2',
+        address3: 'Address line 3',
+        address4: 'Address line 4',
+        address5: 'Address line 5',
+        city: 'City',
+        county: 'County',
+        postcode: 'FA1 1RM',
+        country: 'UK'
+      },
+      doNotContact: false,
+      locked: false
     }
   }
 
