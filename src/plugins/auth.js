@@ -10,7 +10,6 @@ const plugin = {
 
       server.auth.strategy('defra-id', 'bell', {
         // TODO: get redirect URL
-        // TODO: get scopes from Siti Agri
         provider: {
           name: 'defra-id',
           protocol: 'oauth2',
@@ -24,8 +23,8 @@ const plugin = {
             credentials.profile = {
               ...payload,
               crn: payload.contactId,
-              name: `${payload.firstName} ${payload.lastName}`
-            // TODO: get person and organisation Ids from Crown Hosting
+              name: `${payload.firstName} ${payload.lastName}`,
+              organisationId: payload.currentRelationshipId
             }
           }
         },
@@ -53,7 +52,7 @@ const plugin = {
           // TODO: handle expired session
           const userSession = await request.server.app.cache.get(session.sessionId)
           if (userSession) {
-            return { isValid: true, credentials: session }
+            return { isValid: true, credentials: userSession }
           }
           return { isValid: false }
         }

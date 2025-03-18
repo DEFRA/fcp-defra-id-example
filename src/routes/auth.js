@@ -1,3 +1,5 @@
+import { getPermissions } from '../auth/get-permissions.js'
+
 const routes = [{
   method: 'GET',
   path: '/auth/sign-in',
@@ -16,12 +18,16 @@ const routes = [{
   handler: async function (request, h) {
     // TODO: handle expiry
     if (request.auth.isAuthenticated) {
-      const { profile } = request.auth.credentials
+      const { profile, token, refreshToken } = request.auth.credentials
+      const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
+      console.log(role, scope)
       await request.server.app.cache.set(profile.sessionId, {
-        ...profile,
         isAuthenticated: true,
-        token: request.auth.credentials.token,
-        refreshToken: request.auth.credentials.refreshToken
+        ...profile,
+        role,
+        scope,
+        token,
+        refreshToken
       })
 
       request.cookieAuth.set({ sessionId: profile.sessionId })
