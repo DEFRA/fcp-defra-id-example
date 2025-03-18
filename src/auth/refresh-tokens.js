@@ -21,6 +21,8 @@ async function refreshTokens (refreshToken) {
     json: true
   })
 
+  // Payload will include both a new access token and a new refresh token
+  // Refresh tokens can only be used once, so the new refresh token should be stored in place of the old one
   return payload
 }
 

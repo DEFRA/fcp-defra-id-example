@@ -1,9 +1,15 @@
 const DEFAULT_SCOPE = 'user'
 
 async function getPermissions (crn, organisationId, token) {
+  // Cannot be retrieved in a single call so need to make multiple calls to different APIs
+  // 1. Get personId from RPS API
   const personId = await getPersonId(crn, token)
+  // 2. Get roles and privileges from Siti Agri API
   const { role, privileges } = await getRolesAndPrivileges(personId, organisationId, token)
+  // 3. Map roles and privileges to scope
+  // An application specific permission is added to demonstrate how to add non-Siti Agri permissions
   const scope = [DEFAULT_SCOPE, ...privileges]
+  // Hapi.js assumes permissions are added in a `scope` array
   return { role, scope }
 }
 

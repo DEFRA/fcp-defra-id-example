@@ -4,6 +4,10 @@ import config from '../config.js'
 
 async function getSignOutUrl (request, token) {
   const { end_session_endpoint: url } = await getOidcConfig()
+
+  // To prevent CSRF attacks, the state parameter should be passed during redirection
+  // It should be verified when the user is redirected back to the application
+  // The `createState` function generates a unique state value and stores it in the session
   const state = createState(request)
 
   const query = [
