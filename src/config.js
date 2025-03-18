@@ -70,18 +70,6 @@ const config = convict({
     }
   },
   defraId: {
-    enabled: {
-      doc: 'True if Defra Identity is enabled.',
-      format: Boolean,
-      default: true,
-      env: 'DEFRA_ID_ENABLED'
-    },
-    signOutEnabled: {
-      doc: 'True if Defra Identity sign out is enabled.',
-      format: Boolean,
-      default: true,
-      env: 'DEFRA_ID_SIGN_OUT_ENABLED'
-    },
     wellKnownUrl: {
       doc: 'The Defra Identity well known URL.',
       format: String,
@@ -127,7 +115,7 @@ const config = convict({
     refreshTokens: {
       doc: 'True if Defra Identity refresh tokens are enabled.',
       format: Boolean,
-      default: false,
+      default: true,
       env: 'DEFRA_ID_REFRESH_TOKENS'
     }
   },

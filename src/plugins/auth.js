@@ -1,5 +1,6 @@
 import Jwt from '@hapi/jwt'
 import { getOidcConfig } from '../auth/get-oidc-config.js'
+import { refreshTokens } from '../auth/refresh-tokens.js'
 import config from '../config.js'
 
 const plugin = {
@@ -70,8 +71,22 @@ const plugin = {
           return `/auth/sign-in?redirect=${request.url.pathname}`
         },
         validate: async function (request, session) {
-          // TODO: handle expired session
           const userSession = await request.server.app.cache.get(session.sessionId)
+
+          // verify Defra Identity token has not expired
+          try {
+            const decoded = Jwt.token.decode(userSession.token)
+            Jwt.token.verifyTime(decoded)
+          } catch (error) {
+            if (!config.get('defraId.refreshTokens')) {
+              return { isValid: false }
+            }
+            const { access_token: token, refresh_token: refreshToken } = await refreshTokens(userSession.refreshToken)
+            userSession.token = token
+            userSession.refreshToken = refreshToken
+            await request.server.app.cache.set(session.sessionId, userSession)
+          }
+
           if (userSession) {
             return { isValid: true, credentials: userSession }
           }

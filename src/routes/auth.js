@@ -2,7 +2,6 @@ import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
-import config from '../config.js'
 
 const routes = [{
   method: 'GET',
@@ -20,16 +19,10 @@ const routes = [{
     auth: 'defra-id'
   },
   handler: async function (request, h) {
-    // TODO: handle expiry
     if (request.auth.isAuthenticated) {
       const { profile, token, refreshToken } = request.auth.credentials
       // verify token returned from Defra Identity against public key
-      try {
-        await verifyToken(token)
-      } catch (err) {
-        console.error(err)
-        return h.view('500')
-      }
+      await verifyToken(token)
       const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
       await request.server.app.cache.set(profile.sessionId, {
         isAuthenticated: true,
@@ -52,9 +45,6 @@ const routes = [{
   method: 'GET',
   path: '/auth/sign-out',
   handler: async function (request, h) {
-    if (!config.get('defraId.signOutEnabled')) {
-      return h.redirect('/auth/sign-out-oidc')
-    }
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
     return h.redirect(signOutUrl)
   }
@@ -69,9 +59,7 @@ const routes = [{
       await request.server.app.cache.drop(request.auth.credentials?.sessionId)
       request.cookieAuth.clear()
     }
-    if (config.get('defraId.signOutEnabled')) {
-      validateState(request, request.query.state)
-    }
+    validateState(request, request.query.state)
     return h.redirect('/')
   }
 }, {
