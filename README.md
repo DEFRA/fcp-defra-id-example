@@ -78,6 +78,28 @@ scripts/test
 scripts/test -w
 ```
 
+## Patterns
+
+### Authentication strategies
+
+The application contains two authentication strategies:
+
+1. OAuth2.0 orchestrated by [`@hapi/bell`](https://github.com/hapijs/bell)
+1. Cookie-based session management orchestrated by [`@hapi/cookie`](https://github.com/hapijs/cookie)
+
+The OAuth2.0 strategy is used to authenticate users with Defra Identity. Once authenticated, the user is redirected to the application with an access token. This token is used to retrieve user information and permissions from Siti Agri.
+
+> Within this example, the data is mocked.  In a real-world scenario, the data would be retrieved from Siti Agri via KITS/Version 1 APIs.
+
+Once the user is authenticated, the application creates a session cookie. This cookie is used to manage the user's session and is used to authenticate the user on subsequent requests.
+
+The OAuth2.0 token and other session data is stored in Redis and can be used to retrieve user information and permissions from downstream services.
+
+As part of the cookie authentication strategy, the application will check if the token has expired.  
+If the token has expired, it will be refreshed automatically if the `DEFRA_ID_REFRESH_TOKENS` environment variable is set to `true`.
+
+The session will end when the user signs out or the browser is closed.  This is to align with the behaviour of other farming services.
+
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
