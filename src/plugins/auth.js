@@ -29,6 +29,9 @@ const plugin = {
             }
           }
         },
+        location: function () {
+          return config.get('defraId.redirectUrl')
+        },
         clientId: config.get('defraId.clientId'),
         clientSecret: config.get('defraId.clientSecret'),
         providerParams: {

@@ -1,6 +1,6 @@
 const routes = [{
   method: 'GET',
-  path: '/sign-in',
+  path: '/auth/sign-in',
   options: {
     auth: 'defra-id'
   },
@@ -9,7 +9,7 @@ const routes = [{
   }
 }, {
   method: 'GET',
-  path: '/sign-in-oidc',
+  path: '/auth/sign-in-oidc',
   options: {
     auth: 'defra-id'
   },

@@ -35,7 +35,10 @@ const plugin = {
     relativeTo: __dirname,
     isCached: !config.get('isDev'),
     context: async function (request) {
-      const auth = await request.server.app.cache.get(request.auth.credentials.sessionId)
+      if (!request.auth.isAuthenticated) {
+        return {}
+      }
+      const auth = await request.server.app.cache.get(request.auth?.credentials?.sessionId)
       return {
         auth
       }

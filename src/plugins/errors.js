@@ -8,11 +8,6 @@ const plugin = {
         if (response.isBoom) {
           const statusCode = response.output.statusCode
 
-          // TODO: handle more gracefully
-          if (statusCode === 401) {
-            return h.view('401').code(statusCode)
-          }
-
           if (statusCode === 404) {
             return h.view('404').code(statusCode)
           }
