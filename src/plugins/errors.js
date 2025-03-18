@@ -12,6 +12,7 @@ const plugin = {
             return h.view('404').code(statusCode)
           }
 
+          // Catch any user in incorrect scope errors
           if (statusCode === 403) {
             return h.view('403').code(statusCode)
           }

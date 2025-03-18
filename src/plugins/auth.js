@@ -9,6 +9,9 @@ const plugin = {
     register: async (server) => {
       const oidcConfig = await getOidcConfig()
 
+      // Bell is a third-party plugin that provides a common interface for OAuth 2.0 authentication
+      // Used to authenticate users with Defra Identity and a pre-requisite for the Cookie authentication strategy
+      // Also used for changing organisations and signing out
       server.auth.strategy('defra-id', 'bell', {
         provider: {
           name: 'defra-id',
@@ -20,6 +23,8 @@ const plugin = {
           profile: async function (credentials, params, get) {
             const payload = Jwt.token.decode(credentials.token).decoded.payload
 
+            // Map all JWT properties to the credentials object so it can be stored in the session
+            // Add some additional properties to the profile object for convenience
             credentials.profile = {
               ...payload,
               crn: payload.contactId,
@@ -48,11 +53,10 @@ const plugin = {
           // If user intends to switch organisation, force Defra Identity to display the organisation selection screen
           if (request.path === '/auth/organisation') {
             params.forceReselection = true
-          }
-
-          // If user has already selected an organisation in another service, pass the organisation Id to force Defra Id to skip the organisation selection screen
-          if (request.query.organisationId) {
-            params.relationshipId = request.query.organisationId
+            // If user has already selected an organisation in another service, pass the organisation Id to force Defra Id to skip the organisation selection screen
+            if (request.query.organisationId) {
+              params.relationshipId = request.query.organisationId
+            }
           }
 
           return params
@@ -61,6 +65,8 @@ const plugin = {
         isSecure: !config.get('isDev')
       })
 
+      // Cookie is a built-in authentication strategy for hapi.js that authenticates users based on a session cookie
+      // Used for all non-Defra Identity routes
       server.auth.strategy('session', 'cookie', {
         cookie: {
           password: config.get('cookie.password'),
@@ -87,6 +93,8 @@ const plugin = {
             await request.server.app.cache.set(session.sessionId, userSession)
           }
 
+          // If session exists, set the user's details on the request object and allow the request to continue
+          // Depending on the service, additional checks can be performed here
           if (userSession) {
             return { isValid: true, credentials: userSession }
           }
@@ -94,6 +102,8 @@ const plugin = {
         }
       })
 
+      // Set the default authentication strategy to session
+      // All routes will require authentication unless explicitly set to 'defra-id' or `auth: false`
       server.auth.default('session')
     }
   }

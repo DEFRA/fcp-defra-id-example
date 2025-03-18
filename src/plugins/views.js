@@ -35,6 +35,8 @@ const plugin = {
     relativeTo: __dirname,
     isCached: !config.get('isDev'),
     context: async function (request) {
+      // If the user is authenticated, add the user's details to the view context
+      // This allows the view to display the user's session details and the ability to conditionally render content
       if (!request.auth.isAuthenticated) {
         return {}
       }
