@@ -1,4 +1,5 @@
 import { getPermissions } from '../auth/get-permissions.js'
+import { verifyToken } from '../auth/verify-token.js'
 
 const routes = [{
   method: 'GET',
@@ -18,8 +19,14 @@ const routes = [{
   handler: async function (request, h) {
     // TODO: handle expiry
     if (request.auth.isAuthenticated) {
-      // TODO: verify token against public key
       const { profile, token, refreshToken } = request.auth.credentials
+      // verify token returned from Defra Identity against public key
+      try {
+        await verifyToken(token)
+      } catch (err) {
+        console.error(err)
+        return h.view('500')
+      }
       const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
       await request.server.app.cache.set(profile.sessionId, {
         isAuthenticated: true,
