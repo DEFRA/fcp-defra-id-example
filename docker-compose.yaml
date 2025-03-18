@@ -6,8 +6,6 @@ services:
     image: fcp-defra-id-example
     container_name: fcp-defra-id-example
     environment:
-      APPINSIGHTS_CLOUDROLE: fcp-defra-id-example-local
-      APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
       DEFRA_ID_WELL_KNOWN_URL: ${DEFRA_ID_WELL_KNOWN_URL}
       DEFRA_ID_CLIENT_ID: ${DEFRA_ID_CLIENT_ID}
       DEFRA_ID_CLIENT_SECRET: ${DEFRA_ID_CLIENT_SECRET}
