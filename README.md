@@ -160,6 +160,10 @@ If any route does not have a scope defined, it will be accessible to all authent
 
 The `/` route is set to be unprotected to allow users to access the start page without being authenticated.
 
+If a user tries to access a route without the required scope, the `error` plugin will return the `403` page.
+
+> Services may wish to aggregate permissions or map to more meaningful names to simplify authorisation.
+
 ### Switching organisations
 
 If a user is associated with multiple organisations, they will be prompted to select an organisation when they sign in.

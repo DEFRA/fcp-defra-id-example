@@ -12,6 +12,10 @@ const plugin = {
             return h.view('404').code(statusCode)
           }
 
+          if (statusCode === 403) {
+            return h.view('403').code(statusCode)
+          }
+
           request.log('error', {
             statusCode,
             message: response.message,
