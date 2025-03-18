@@ -136,6 +136,8 @@ The application will then clear the session and the user will be signed out.
 
 As sign out is not a feature supported by `@hapi/bell`, a module has been created to ensure the redirect Url is correctly set and appropriate state validation is performed to prevent CSRF attacks.
 
+> The sign out process will only end the session with the application and the Defra Identity SSO session.  The user will still be signed into any other services that use the same Defra Identity policy.
+
 ### Refreshing tokens
 
 As part of the cookie authentication strategy, the application will check if the token has expired.  
@@ -167,6 +169,29 @@ During their session, they may wish to switch organisations.  This can be achiev
 If the Defra Identity session is still active, the user will be redirected to the organisation selection page.  If the session has expired, the user will be prompted to sign in again first.
 
 The `/auth/organisation` route enables this functionality.  As the user will be redirected to the same post Defra Identity sign in route, the session data, including permissions, will be refreshed to reflect the new organisation.
+
+### Single Sign On (SSO)
+
+As user journeys may span multiple services, it is important to support Single Sign On (SSO) to provide a seamless experience for users.
+
+Defra Identity supports SSO through the use of policies.  All FCP services should use the same policy to ensure a consistent experience.
+
+If a user is redirected to a different service that uses the same policy, when they are redirected to the Defra Identity sign in endpoint, they will be automatically signed in and redirected back to the new consuming service without needing to sign in again.
+
+#### SSO and organisations
+
+Although SSO avoids the need to sign in again, it does not automatically switch organisations.  If a user is associated with multiple organisations, they will still be prompted to select an organisation.
+
+To avoid this, `relationshipId` can be passed as a query parameter when redirecting to the Defra Identity sign in endpoint.  This will automatically select the organisation associated with the `relationshipId`.  The `relationshipId` should be set to the `organisationId` of the organisation the user wishes to switch to.
+
+The `organisationId` can be retrieved from the JWT token in the `currentRelationshipId` property.  This example sets the `organisationId` in the session when the user selects an organisation for convenience.
+
+To make this work, services must include the `ssoOrgId` query parameter when redirecting between services. 
+The `sso` plugin in the example service handles intercept any requests with the `ssoOrgId` query parameter and redirect to Defra Identity to setup an appropriate session.
+
+The user is then redirected to their original destination with the appropriate organisation selected.
+
+> It is important that no route is configured to use a query parameter named `ssoOrgId` to avoid conflicts with the plugin.
 
 ## Licence
 
