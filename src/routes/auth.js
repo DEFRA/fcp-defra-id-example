@@ -1,5 +1,8 @@
 import { getPermissions } from '../auth/get-permissions.js'
+import { getSignOutUrl } from '../auth/get-sign-out-url.js'
+import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
+import config from '../config.js'
 
 const routes = [{
   method: 'GET',
@@ -49,9 +52,26 @@ const routes = [{
   method: 'GET',
   path: '/auth/sign-out',
   handler: async function (request, h) {
-    // TODO: sign out of Defra Id as well as locally
-    await request.server.app.cache.drop(request.auth.credentials.sessionId)
-    request.cookieAuth.clear()
+    if (!config.get('defraId.signOutEnabled')) {
+      return h.redirect('/auth/sign-out-oidc')
+    }
+    const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
+    return h.redirect(signOutUrl)
+  }
+}, {
+  method: 'GET',
+  path: '/auth/sign-out-oidc',
+  options: {
+    auth: false
+  },
+  handler: async function (request, h) {
+    if (request.auth.isAuthenticated) {
+      await request.server.app.cache.drop(request.auth.credentials?.sessionId)
+      request.cookieAuth.clear()
+    }
+    if (config.get('defraId.signOutEnabled')) {
+      validateState(request, request.query.state)
+    }
     return h.redirect('/')
   }
 }, {
