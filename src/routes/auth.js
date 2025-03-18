@@ -46,6 +46,15 @@ const routes = [{
     request.cookieAuth.clear()
     return h.redirect('/')
   }
+}, {
+  method: 'GET',
+  path: '/auth/switch-organisation',
+  options: {
+    auth: 'defra-id'
+  },
+  handler: async function (request, h) {
+    return h.redirect('/home')
+  }
 }]
 
 export default routes

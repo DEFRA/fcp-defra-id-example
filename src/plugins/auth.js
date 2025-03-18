@@ -33,10 +33,13 @@ const plugin = {
         },
         clientId: config.get('defraId.clientId'),
         clientSecret: config.get('defraId.clientSecret'),
-        providerParams: {
-          serviceId: config.get('defraId.serviceId'),
-          p: config.get('defraId.policy'),
-          response_mode: 'query'
+        providerParams: function (request) {
+          return {
+            forceReselection: request.path === '/auth/switch-organisation',
+            serviceId: config.get('defraId.serviceId'),
+            p: config.get('defraId.policy'),
+            response_mode: 'query'
+          }
         },
         password: config.get('cookie.password'),
         isSecure: !config.get('isDev')
