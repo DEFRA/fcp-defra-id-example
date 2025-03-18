@@ -47,6 +47,7 @@ async function getPersonId (crn, token) {
 
 async function getRolesAndPrivileges (personId, organisationId, token) {
   // simulate call to Siti Agri API
+  // returns all roles and privileges for so need to filter for logged in user
   // PATH: /SitiAgriApi/authorisation/organisation/<organisationId>/authorisation
   // METHOD: GET
   // HEADERS:
