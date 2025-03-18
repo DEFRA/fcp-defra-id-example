@@ -37,6 +37,15 @@ const routes = [{
     }
     return h.redirect('/')
   }
+}, {
+  method: 'GET',
+  path: '/auth/sign-out',
+  handler: async function (request, h) {
+    // TODO: sign out of Defra Id as well as locally
+    await request.server.app.cache.drop(request.auth.credentials.sessionId)
+    request.cookieAuth.clear()
+    return h.redirect('/')
+  }
 }]
 
 export default routes
