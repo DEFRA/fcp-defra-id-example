@@ -14,6 +14,21 @@ Whilst this service focuses on the Rural Payments account and FCP, the patterns 
 
 The only significant difference is that FCP services must retrieve permissions from Siti Agri as opposed to being provided by Defra Customer.
 
+Once a user has been authenticated, a service must retrieve this data from Siti Agri via an API call. A complication of this is that this API cannot retrieve all permissions for an individual, instead it can only retrieve permissions for a specific organisation the person is associated with.
+
+The majority of farming APIs follow this concept, so FCP journey's should be based around an organisation, rather than an individual. A typical journey would be:
+
+1. User accesses a service
+1. User is redirected to the Defra Identity login page
+1. User logs in
+1. User selects an organisation
+1. User is redirected back to the consuming service with an authorisation code
+1. Consuming service exchanges the authorisation code for an access token
+1. Consuming service stores JWT token in session
+1. Consuming service retrieves permissions for the organisation from Siti Agri
+
+> If a user is only associated with one organisation, the organisation selection step is automatically skipped.
+
 ## FCP Development Guide
 
 The [FCP Development Guide](https://defra.github.io/ffc-development-guide/development-patterns/authentication/defra-identity/) provides more context on how to use Defra Identity and Siti Agri within FCP services.
@@ -137,28 +152,21 @@ Hapi.js authorisation is simpler when using scopes.  Scopes are used to define t
 
 Permissions retrieved from Siti Agri are mapped to the `scope` property of the user session.  This session data is added to the `request.auth.credentials` object on each request.
 
-Routes can be protected by scopes by using the `scope` property in the route configuration.
-
-For example:
-
-```javascript
-{
-  method: 'GET',
-  path: '/restricted',
-  options: {
-    auth: {
-      scope: ['permission1']
-    }
-  }
-  handler: (request, h) => {
-    return 'You have access to this route';
-  }
-}
-```
+Routes can be protected by scopes by using the `scope` property in the route configuration.  The `/home` route is an example of this where `user` scope is required.
 
 If any route does not have a scope defined, it will be accessible to all authenticated users.
 
 The `/` route is set to be unprotected to allow users to access the start page without being authenticated.
+
+### Switching organisations
+
+If a user is associated with multiple organisations, they will be prompted to select an organisation when they sign in.
+
+During their session, they may wish to switch organisations.  This can be achieved by passing the `forceReselection` query parameter when redirecting to the Defra Identity sign in endpoint.
+
+If the Defra Identity session is still active, the user will be redirected to the organisation selection page.  If the session has expired, the user will be prompted to sign in again first.
+
+The `/auth/organisation` route enables this functionality.  As the user will be redirected to the same post Defra Identity sign in route, the session data, including permissions, will be refreshed to reflect the new organisation.
 
 ## Licence
 
