@@ -20,7 +20,6 @@ const routes = [{
     if (request.auth.isAuthenticated) {
       const { profile, token, refreshToken } = request.auth.credentials
       const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
-      console.log(role, scope)
       await request.server.app.cache.set(profile.sessionId, {
         isAuthenticated: true,
         ...profile,
@@ -32,8 +31,9 @@ const routes = [{
 
       request.cookieAuth.set({ sessionId: profile.sessionId })
 
-      // TODO: handle redirect
-      return h.redirect('/home')
+      const redirect = request.yar.get('redirect') ?? '/home'
+      request.yar.clear('redirect')
+      return h.redirect(redirect)
     }
     return h.redirect('/')
   }
