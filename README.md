@@ -1,5 +1,7 @@
 # FCP Defra Identity example
 
+> NOTE: This is a work in progress and only contains a basic authentication example.
+
 This is an example service that demonstrates how to use the Defra Identity service to authenticate users.
 
 ## Prerequisites
@@ -7,13 +9,9 @@ This is an example service that demonstrates how to use the Defra Identity servi
 - Docker
 - Docker Compose
 
-Optional:
-- Kubernetes
-- Helm
+## Running the application
 
-## Running the srclication
-
-The srclication is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
+The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
 
 - A Helm chart is provided for production deployments to Kubernetes.
 
@@ -85,95 +83,3 @@ The following attribution statement MUST be cited in your products and applicati
 The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
 
 It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.
-
-### FFC-Service-Deploy Pipeline
-
-More information about the pipeline : [FFC-Service-Deploy Pipeline](https://eaflood.atlassian.net/wiki/spaces/FAPT/pages/5332500540/Migrating+to+the+new+pipeline)
-
-### Provisioning
-
-After updating the `provision.azure` file with the correct information, the pipeline will create the required resources automatically
-At the moment the following resources provisioning automatically:
-- Managed Identity
-- PostgreSql Database
-- Service Bus Queue
-- Service Bus Topic
-- Service Bus Subscription
-
-The permissions to the mentioned resources will be automatically granted by the pipeline.
-
-### Using Workload Identity
-
-Database:
-
-```
-const { DefaultAzureCredential, getBearerTokenProvider } = require('@azure/identity')
-
-function isProd () {
-  return process.env.NODE_ENV === production
-}
-
-const dbConfig = {
-  username: process.env.POSTGRES_USERNAME,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  schema: process.env.POSTGRES_SCHEMA_NAME || 'public',
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: process.env.POSTGRES_PORT || 5432,
-  logging: process.env.POSTGRES_LOGGING || false,
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: isProd()
-  },
-  hooks: {
-    beforeConnect: async (cfg) => {
-      if (isProd()) {
-        const credential = new DefaultAzureCredential({ managedIdentityClientId: process.env.AZURE_CLIENT_ID })
-        const tokenProvider = getBearerTokenProvider(
-          credential,
-          'https://ossrdbms-aad.database.windows.net/.default'
-        )
-        cfg.password = tokenProvider
-      }
-    }
-  },
-
-```
-
-Service Bus:
-
-```
-const mqSchema = joi.object({
-  messageQueue: {
-    host: joi.string().default('localhost'),
-    useCredentialChain: joi.bool().default(false),
-    type: joi.string(),
-    appInsights: joi.object(),
-    username: joi.string().optional(),
-    password: joi.string().optional(),
-    managedIdentityClientId: joi.string().optional()
-  },
-  applyQueue: queueSchema
-})
-
-const mqConfig = {
-  messageQueue: {
-    host: process.env.MESSAGE_QUEUE_HOST,
-    useCredentialChain: process.env.NODE_ENV === 'production',
-    type: 'queue',
-    appInsights: process.env.NODE_ENV === 'production' ? require('applicationinsights') : undefined,
-    username: process.env.MESSAGE_QUEUE_USER,
-    password: process.env.MESSAGE_QUEUE_PASSWORD,
-    managedIdentityClientId: process.env.AZURE_CLIENT_ID
-  },
-  {{ TheServiceQueue }}: {
-    address: process.env.APPLY_QUEUE_ADDRESS
-  }
-}
-
-```
-
-For Storage account and other resources pass the azure client id to the `DefaultAzureCredential` method:
-```
-new DefaultAzureCredential({ managedIdentityClientId: process.env.AZURE_CLIENT_ID })
-```
