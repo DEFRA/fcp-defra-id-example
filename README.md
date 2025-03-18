@@ -114,6 +114,38 @@ The application will then clear the session and the user will be signed out.
 
 As sign out is not a feature supported by `@hapi/bell`, a module has been created to ensure the redirect Url is correctly set and appropriate state validation is performed to prevent CSRF attacks.
 
+### Protecting routes
+
+This example sets cookie authentication as the default authentication strategy for all routes.  
+This means that all routes are protected by default unless explicitly set to be unprotected or use the Defra Identity OAuth2.0 strategy.
+
+Hapi.js authorisation is simpler when using scopes.  Scopes are used to define the permissions a user has within the application.
+
+Permissions retrieved from Siti Agri are mapped to the `scope` property of the user session.  This session data is added to the `request.auth.credentials` object on each request.
+
+Routes can be protected by scopes by using the `scope` property in the route configuration.
+
+For example:
+
+```javascript
+{
+  method: 'GET',
+  path: '/restricted',
+  options: {
+    auth: {
+      scope: ['permission1']
+    }
+  }
+  handler: (request, h) => {
+    return 'You have access to this route';
+  }
+}
+```
+
+If any route does not have a scope defined, it will be accessible to all authenticated users.
+
+The `/` route is set to be unprotected to allow users to access the start page without being authenticated.
+
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
