@@ -15,7 +15,8 @@ const plugin = {
     },
     cookieOptions: {
       password: config.get('cookie.password'),
-      isSecure: !config.get('isDev')
+      isSecure: !config.get('isDev'),
+      isSameSite: 'Lax'
     }
   }
 }
