@@ -67,14 +67,16 @@ const plugin = {
 
       // Cookie is a built-in authentication strategy for hapi.js that authenticates users based on a session cookie
       // Used for all non-Defra Identity routes
+      // Lax policy required to allow redirection after Defra Identity sign out
       server.auth.strategy('session', 'cookie', {
         cookie: {
           password: config.get('cookie.password'),
           path: '/',
-          isSecure: !config.get('isDev')
+          isSecure: !config.get('isDev'),
+          isSameSite: 'Lax'
         },
         redirectTo: function (request) {
-          return `/auth/sign-in?redirect=${request.url.pathname}`
+          return `/auth/sign-in?redirect=${request.url.pathname}${request.url.search}`
         },
         validate: async function (request, session) {
           const userSession = await request.server.app.cache.get(session.sessionId)

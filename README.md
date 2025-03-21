@@ -132,8 +132,6 @@ The original path is stored in Redis session storage and is retrieved once the u
 
 [`@hapi/yar`](https://github.com/hapijs/yar) is used to store the original path in the session.  Like `@hapi/cookie`, `@hapi/yar` is a cookie-based session management plugin, but is used for unauthenticated users.
 
-In this simple example, only the path is stored, ignoring any query or payload data.
-
 ### Sign out
 
 When a user signs out, the application will redirect the user to the Defra Identity sign out endpoint.  Once the user has signed out, they will be redirected back to the application.

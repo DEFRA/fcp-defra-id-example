@@ -52,7 +52,7 @@ const routes = [{
   method: 'GET',
   path: '/auth/sign-out-oidc',
   options: {
-    auth: false
+    auth: { mode: 'try' }
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
