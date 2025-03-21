@@ -11,6 +11,7 @@ const plugin = {
           response.headers['X-Frame-Options'] = 'DENY'
           response.headers['X-Robots-Tag'] = 'noindex, nofollow'
           response.headers['X-XSS-Protection'] = '1; mode=block'
+          response.headers['Cache-Control'] = 'no-cache'
           response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
           response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
           response.headers['Cross-Origin-Resource-Policy'] = 'same-site'
