@@ -4,7 +4,7 @@ import config from '../config.js'
 // Yar is a session management plugin for hapi.js that allows you to store session data in a cookie
 // Yar is used to store temporary session data not dependent on the user's authentication status
 // such as state values used to prevent CSRF attacks and redirect URLs
-// Token set to Lax to ensure redirect from Defra Identity can access session data
+// Token set to Lax to ensure redirect from Defra Identity can access credentials data
 const plugin = {
   plugin: Yar,
   options: {
