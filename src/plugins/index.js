@@ -4,6 +4,7 @@ import Bell from '@hapi/bell'
 import Cookie from '@hapi/cookie'
 import Scooter from '@hapi/scooter'
 import csp from './content-security-policy.js'
+import headers from './headers.js'
 import auth from './auth.js'
 import session from './session.js'
 import logging from './logging.js'
@@ -20,6 +21,7 @@ async function registerPlugins (server) {
     Cookie,
     Scooter,
     csp,
+    headers,
     auth,
     session,
     logging,
