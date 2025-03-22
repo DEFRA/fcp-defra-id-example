@@ -21,11 +21,11 @@ async function registerPlugins (server) {
     Cookie,
     Scooter,
     csp,
-    headers,
     auth,
     session,
     logging,
     errors,
+    headers,
     views,
     router,
     sso
