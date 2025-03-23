@@ -116,7 +116,7 @@ The token is validated against the Defra Identity public key to ensure it is val
 
 This token is used to retrieve user information and permissions from Siti Agri.
 
-> Within this example, the data is mocked.  In a real-world scenario, the data would be retrieved from Siti Agri via KITS/Version 1 APIs.
+> Within this example, the data is mocked.  In a real-world scenario, the data would be retrieved from Siti Agri via Crown Hosting APIs.
 
 Once the user is authenticated, the application creates a session cookie. This cookie is used to manage the user's session and is used to authenticate the user on subsequent requests.
 
@@ -221,6 +221,7 @@ The application has been designed with security in mind.  The following security
 - X-Frame-Options to prevent clickjacking
 - X-XSS-Protection to prevent cross-site scripting attacks
 - Authorisation code exchange to prevent token leakage
+- Public key verification to ensure token is signed by Defra Identity
 - State and nonce validation to prevent CSRF and token replay attacks
 - Token expiration validation
 - Session management to prevent session fixation attacks

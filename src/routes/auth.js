@@ -24,7 +24,14 @@ const routes = [{
       const { profile, token, refreshToken } = request.auth.credentials
       // verify token returned from Defra Identity against public key
       await verifyToken(token)
+
+      // Typically permissions for the selected organisation would be available in the `roles` property of the token
+      // However, when signing in with RPA credentials, the roles only include the role name and not the permissions
+      // Therefore, we need to make additional API calls to get the permissions from Siti Agri
+      // These calls are authenticated using the token returned from Defra Identity
       const { role, scope } = await getPermissions(profile.crn, profile.organisationId, profile.token)
+
+      // Store token and all useful data in the session cache
       await request.server.app.cache.set(profile.sessionId, {
         isAuthenticated: true,
         ...profile,
@@ -34,14 +41,19 @@ const routes = [{
         refreshToken
       })
 
+      // Create a new session using cookie authentication strategy which is used for all subsequent requests
       request.cookieAuth.set({ sessionId: profile.sessionId })
 
+      // Redirect user to the page they were trying to access before signing in or to the home page if no redirect was set
       const redirect = request.yar.get('redirect') ?? '/home'
       request.yar.clear('redirect')
       // Ensure redirect is a relative path to prevent redirect attacks
       const safeRedirect = getSafeRedirect(redirect)
       return h.redirect(safeRedirect)
     }
+
+    // If the user is not authenticated, redirect to the home page
+    // This should never be reached as the user should be redirected to the Defra Identity login page
     return h.redirect('/')
   }
 }, {
