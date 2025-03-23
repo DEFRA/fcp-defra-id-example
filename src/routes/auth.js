@@ -37,7 +37,9 @@ const routes = [{
 
       const redirect = request.yar.get('redirect') ?? '/home'
       request.yar.clear('redirect')
-      return h.redirect(redirect)
+      // Ensure redirect is a relative path to prevent redirect attacks
+      const safeRedirect = redirect.startsWith('/') ? redirect : '/home'
+      return h.redirect(safeRedirect)
     }
     return h.redirect('/')
   }
@@ -71,7 +73,9 @@ const routes = [{
   handler: async function (request, h) {
     const redirect = request.yar.get('redirect') ?? '/home'
     request.yar.clear('redirect')
-    return h.redirect(redirect)
+    // Ensure redirect is a relative path to prevent redirect attacks
+    const safeRedirect = redirect.startsWith('/') ? redirect : '/home'
+    return h.redirect(safeRedirect)
   }
 }]
 

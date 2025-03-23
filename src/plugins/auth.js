@@ -36,7 +36,9 @@ const plugin = {
         location: function (request) {
           // If request includes a redirect query parameter, store it in the session to allow redirection after authentication
           if (request.query.redirect) {
-            request.yar.set('redirect', request.query.redirect)
+            // Ensure redirect is a relative path to prevent redirect attacks
+            const safeRedirect = request.query.redirect.startsWith('/') ? request.query.redirect : '/home'
+            request.yar.set('redirect', safeRedirect)
           }
 
           return config.get('defraId.redirectUrl')
