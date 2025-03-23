@@ -2,6 +2,7 @@ import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
+import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 
 const routes = [{
   method: 'GET',
@@ -38,7 +39,7 @@ const routes = [{
       const redirect = request.yar.get('redirect') ?? '/home'
       request.yar.clear('redirect')
       // Ensure redirect is a relative path to prevent redirect attacks
-      const safeRedirect = redirect.startsWith('/') ? redirect : '/home'
+      const safeRedirect = getSafeRedirect(redirect)
       return h.redirect(safeRedirect)
     }
     return h.redirect('/')
@@ -74,7 +75,7 @@ const routes = [{
     const redirect = request.yar.get('redirect') ?? '/home'
     request.yar.clear('redirect')
     // Ensure redirect is a relative path to prevent redirect attacks
-    const safeRedirect = redirect.startsWith('/') ? redirect : '/home'
+    const safeRedirect = getSafeRedirect(redirect)
     return h.redirect(safeRedirect)
   }
 }]
