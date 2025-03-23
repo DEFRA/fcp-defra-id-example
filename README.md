@@ -209,7 +209,26 @@ This is handled by the `view` plugin which adds the `auth` object to the view co
 
 The `home` view is an example of this where all session data is displayed.
 
-> In a real-world scenario, the user token data would not be displayed in the view.
+> In a real-world scenario, the user token data should not be displayed in the view.
+
+### Security
+
+The application has been designed with security in mind.  The following security patterns have been implemented:
+- Content Security Policy (CSP) to prevent cross-site scripting attacks
+- HTTP Strict Transport Security (HSTS) to ensure all communication is over HTTPS
+- Referrer Policy to prevent leaking sensitive information
+- X-Content-Type-Options to prevent MIME type sniffing
+- X-Frame-Options to prevent clickjacking
+- X-XSS-Protection to prevent cross-site scripting attacks
+- Authorisation code exchange to prevent token leakage
+- State and nonce validation to prevent CSRF and token replay attacks
+- Token expiration validation
+- Session management to prevent session fixation attacks
+- Scope-based authorisation to prevent unauthorised access
+- Redirect validation to prevent open redirects
+- No store policy to prevent caching of sensitive information and back button and browser history attacks
+
+> **Important** Security is subjective and should be reviewed to ensure it meets the requirements of the service and the technologies used.
 
 ## Licence
 
