@@ -162,7 +162,7 @@ Routes can be protected by scopes by using the `scope` property in the route con
 
 If any route does not have a scope defined, it will be accessible to all authenticated users.
 
-The `/` route is set to be unprotected to allow users to access the start page without being authenticated.
+The `/` route is set to be unprotected and only tries to authenticate the to allow users to access the start page without being authenticated.
 
 If a user tries to access a route without the required scope, the `error` plugin will return the `403` page.
 
