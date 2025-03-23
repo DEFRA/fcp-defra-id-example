@@ -10,7 +10,10 @@ const plugin = {
           headers['X-Frame-Options'] = 'DENY'
           headers['X-Robots-Tag'] = 'noindex, nofollow'
           headers['X-XSS-Protection'] = '1; mode=block'
-          headers['Cache-Control'] = 'no-cache'
+          // Cache-Control must be lower case to avoid conflicts with Hapi's built-in header handling
+          headers['cache-control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+          headers.Pragma = 'no-cache'
+          headers.Expires = '0'
           headers['Cross-Origin-Opener-Policy'] = 'same-origin'
           headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
           headers['Cross-Origin-Resource-Policy'] = 'same-site'
