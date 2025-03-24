@@ -1,4 +1,4 @@
-import { createServer } from '../../../../src/server.js'
+import { createServer } from '../../../src/server.js'
 
 describe('healthy test', () => {
   let server

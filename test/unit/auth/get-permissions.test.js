@@ -1,4 +1,4 @@
-import { getPermissions } from '../../src/auth/get-permissions.js'
+import { getPermissions } from '../../../src/auth/get-permissions.js'
 
 const crn = '1234567890'
 const organisationId = '1234567'

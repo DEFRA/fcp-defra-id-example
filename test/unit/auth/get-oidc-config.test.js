@@ -11,13 +11,13 @@ jest.unstable_mockModule('@hapi/wreck', () => ({
 }))
 
 const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../src/config.js', () => ({
+jest.unstable_mockModule('../../../src/config.js', () => ({
   default: {
     get: mockConfigGet
   }
 }))
 
-const { getOidcConfig } = await import('../../src/auth/get-oidc-config.js')
+const { getOidcConfig } = await import('../../../src/auth/get-oidc-config.js')
 
 describe('getOidcConfig', () => {
   beforeEach(() => {
