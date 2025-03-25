@@ -17,7 +17,7 @@ const routes = [{
   method: 'GET',
   path: '/auth/sign-in-oidc',
   options: {
-    auth: 'defra-id'
+    auth: { strategy: 'defra-id', mode: 'try' }
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
@@ -53,8 +53,9 @@ const routes = [{
     }
 
     // If the user is not authenticated, redirect to the home page
-    // This should never be reached as the user should be redirected to the Defra Identity login page
-    return h.redirect('/')
+    // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
+    // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back
+    return h.view('unauthorised')
   }
 }, {
   method: 'GET',

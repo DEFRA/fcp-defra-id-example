@@ -1,0 +1,12 @@
+{% extends '_layout.njk' %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Sorry, we are unable to sign you in.</h1>
+      <p class="govuk-body">Please <a class="govuk-link" href="/auth/sign-in">try again</a>.</p>
+    </div>
+  </div>
+{% endblock %}
