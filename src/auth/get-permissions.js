@@ -22,7 +22,7 @@ async function getPersonId (crn, token) {
   // PATH: /person/3337243/summary
   // METHOD: GET
   // HEADERS:
-  //   crn: <crn
+  //   crn: <crn>
   //   Authorization <token>
 
   const mockResponse = {

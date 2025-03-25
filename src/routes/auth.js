@@ -71,11 +71,11 @@ const routes = [{
     auth: { mode: 'try' }
   },
   handler: async function (request, h) {
+    validateState(request, request.query.state)
     if (request.auth.isAuthenticated) {
       await request.server.app.cache.drop(request.auth.credentials?.sessionId)
       request.cookieAuth.clear()
     }
-    validateState(request, request.query.state)
     return h.redirect('/')
   }
 }, {
