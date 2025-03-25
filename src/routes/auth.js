@@ -54,7 +54,7 @@ const routes = [{
 
     // If the user is not authenticated, redirect to the home page
     // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
-    // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back
+    // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back in the browser
     return h.view('unauthorised')
   }
 }, {
