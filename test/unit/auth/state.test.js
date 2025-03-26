@@ -1,69 +1,63 @@
+import crypto from 'crypto'
 import { jest } from '@jest/globals'
 
-const mockRandomUUID = jest.fn()
-const mockUUID = 'mock-uuid'
-jest.unstable_mockModule('crypto', () => ({
-  default: {
-    randomUUID: mockRandomUUID
-  }
-}))
+const cryptoSpy = jest.spyOn(crypto, 'randomUUID')
 
-const mockYarSet = jest.fn()
-const mockYarGet = jest.fn()
-const mockYarClear = jest.fn()
+const mockSet = jest.fn()
+const mockGet = jest.fn()
+const mockClear = jest.fn()
 
-const mockRequest = { yar: { set: mockYarSet, get: mockYarGet, clear: mockYarClear } }
+const mockRequest = { yar: { set: mockSet, get: mockGet, clear: mockClear } }
 let mockState
 
 const { createState, validateState } = await import('../../../src/auth/state.js')
 
 beforeEach(() => {
   jest.clearAllMocks()
-  mockRandomUUID.mockReturnValue(mockUUID)
 })
 
 describe('createState', () => {
   test('should generate a unique id for the state', () => {
     createState(mockRequest)
-    expect(mockRandomUUID).toHaveBeenCalled()
+    expect(cryptoSpy).toHaveBeenCalled()
   })
 
   test('should store the state in the session in the state key', () => {
     createState(mockRequest)
-    expect(mockYarSet.mock.calls[0][0]).toBe('state')
+    expect(mockSet.mock.calls[0][0]).toBe('state')
   })
 
   test('should store state as a base64 encoded string', () => {
     createState(mockRequest)
-    expect(mockYarSet.mock.calls[0][1]).toMatch(/^[A-Za-z0-9+/]+={0,2}$/)
+    expect(mockSet.mock.calls[0][1]).toMatch(/^[A-Za-z0-9+/]+={0,2}$/)
   })
 
   test('should store the unique id in the state', () => {
     createState(mockRequest)
-    const state = Buffer.from(mockYarSet.mock.calls[0][1], 'base64').toString()
-    expect(JSON.parse(state).id).toBe(mockUUID)
+    const state = Buffer.from(mockSet.mock.calls[0][1], 'base64').toString()
+    expect(JSON.parse(state).id).toBe(cryptoSpy.mock.results[0].value)
   })
 
   test('should return the state', () => {
     const state = createState(mockRequest)
-    expect(state).toBe(mockYarSet.mock.calls[0][1])
+    expect(state).toBe(mockSet.mock.calls[0][1])
   })
 })
 
 describe('validateState', () => {
   beforeEach(() => {
-    mockState = Buffer.from(JSON.stringify({ id: mockUUID })).toString('base64')
-    mockYarGet.mockReturnValue(mockState)
+    mockState = Buffer.from(JSON.stringify({ id: crypto.randomUUID() })).toString('base64')
+    mockGet.mockReturnValue(mockState)
   })
 
   test('should get the state from the session', () => {
     validateState(mockRequest, mockState)
-    expect(mockYarGet).toHaveBeenCalledWith('state')
+    expect(mockGet).toHaveBeenCalledWith('state')
   })
 
   test('should clear the state from the session', () => {
     validateState(mockRequest, mockState)
-    expect(mockYarClear).toHaveBeenCalledWith('state')
+    expect(mockClear).toHaveBeenCalledWith('state')
   })
 
   test('should not throw an error if stored state matches returned state', () => {
@@ -75,7 +69,7 @@ describe('validateState', () => {
   })
 
   test('should throw an error if no stored state is found', () => {
-    mockYarGet.mockReturnValue(undefined)
+    mockGet.mockReturnValue(undefined)
     expect(() => validateState(mockRequest, mockState)).toThrow('Invalid state, possible CSRF attack')
   })
 })
