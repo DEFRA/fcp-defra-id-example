@@ -5,7 +5,7 @@ describe('assets', () => {
     expect(route).toBeInstanceOf(Object)
   })
 
-  test('should return GET/assets route', () => {
+  test('should return GET /assets route', () => {
     expect(route.method).toBe('GET')
     expect(route.path).toBe('/assets/{path*}')
   })
@@ -20,5 +20,9 @@ describe('assets', () => {
 
   test('should return any govuk frontend asset', () => {
     expect(route.options.handler.directory.path).toContain('node_modules/govuk-frontend/dist/govuk/assets')
+  })
+
+  test('should return any local asset', () => {
+    expect(route.options.handler.directory.path).toContain('src/assets')
   })
 })

@@ -10,7 +10,7 @@ const routes = [{
   options: {
     auth: 'defra-id'
   },
-  handler: async function (request, h) {
+  handler: function (request, h) {
     return h.redirect('/home')
   }
 }, {
