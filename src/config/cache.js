@@ -12,7 +12,7 @@ const config = convict({
   host: {
     doc: 'The Redis cache host.',
     format: String,
-    default: '',
+    default: null,
     env: 'REDIS_HOST'
   },
   port: {
@@ -24,7 +24,7 @@ const config = convict({
   password: {
     doc: 'The Redis cache password.',
     format: String,
-    default: '',
+    default: process.env.NODE_ENV === 'production' ? null : undefined,
     env: 'REDIS_PASSWORD'
   },
   tls: {
