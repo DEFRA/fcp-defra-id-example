@@ -30,7 +30,7 @@ const config = convict({
   tls: {
     doc: 'True if the Redis cache is using TLS.',
     format: Object,
-    default: process.env.REDIS_TLS === 'true' ? {} : undefined
+    default: process.env.NODE_ENV === 'production' ? {} : undefined
   },
   segment: {
     doc: 'The cache segment.',
