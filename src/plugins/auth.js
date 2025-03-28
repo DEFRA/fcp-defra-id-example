@@ -2,7 +2,7 @@ import Jwt from '@hapi/jwt'
 import { getOidcConfig } from '../auth/get-oidc-config.js'
 import { refreshTokens } from '../auth/refresh-tokens.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
-import config from '../config.js'
+import config from '../config/index.js'
 
 const plugin = {
   plugin: {

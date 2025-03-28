@@ -100,7 +100,7 @@ describe('registerPlugins', () => {
     expect(mockRegister).toHaveBeenCalledWith(expect.arrayContaining([sso]))
   })
 
-  test('should register headers plugin after errrors plugin', async () => {
+  test('should register headers plugin after errors plugin', async () => {
     await registerPlugins(mockServer)
     const plugins = mockRegister.mock.calls[0][0]
     const errorsIndex = plugins.findIndex(plugin => plugin.plugin.name === 'errors')

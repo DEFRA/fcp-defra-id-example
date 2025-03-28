@@ -1,6 +1,6 @@
 import Wreck from '@hapi/wreck'
 import { getOidcConfig } from './get-oidc-config.js'
-import config from '../config.js'
+import config from '../config/index.js'
 
 async function refreshTokens (refreshToken) {
   const { token_endpoint: url } = await getOidcConfig()

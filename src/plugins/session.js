@@ -1,5 +1,5 @@
 import Yar from '@hapi/yar'
-import config from '../config.js'
+import config from '../config/index.js'
 
 // Yar is a session management plugin for hapi.js that allows you to store session data in a cookie
 // Yar is used to store temporary session data not dependent on the user's authentication status

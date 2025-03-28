@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import Vision from '@hapi/vision'
 
 const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config.js', () => ({
+jest.unstable_mockModule('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
