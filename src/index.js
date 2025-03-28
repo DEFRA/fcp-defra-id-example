@@ -1,8 +1,12 @@
 import { createServer } from './server.js'
 
-const init = async () => {
+async function init () {
   const server = await createServer()
   await server.start()
 }
 
-await init()
+export { init }
+
+if (import.meta.url === new URL(import.meta.url).href) {
+  await init()
+}
