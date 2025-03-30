@@ -16,3 +16,9 @@ services:
       - ./package.json:/home/node/package.json
     environment:
       NODE_OPTIONS: "$NODE_OPTIONS --experimental-vm-modules"
+      NODE_ENV: test
+      DEFRA_ID_WELL_KNOWN_URL: https://oidc.example.com/.well-known/openid-configuration
+      DEFRA_ID_CLIENT_ID: test-client-id
+      DEFRA_ID_CLIENT_SECRET: test-client-secret
+      DEFRA_ID_SERVICE_ID: test-service-id
+      DEFRA_ID_POLICY: test-policy
