@@ -1,4 +1,4 @@
-const config = {
+export default {
   collectCoverage: true,
   collectCoverageFrom: [
     '**/*.js',
@@ -34,5 +34,3 @@ const config = {
   verbose: true,
   transform: {}
 }
-
-export default config
