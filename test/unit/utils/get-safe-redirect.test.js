@@ -20,14 +20,12 @@ describe('getSafeRedirect', () => {
   })
 
   test('should return "/home" if redirect is undefined', () => {
-    const redirect = undefined
-    const result = getSafeRedirect(redirect)
+    const result = getSafeRedirect(undefined)
     expect(result).toBe('/home')
   })
 
   test('should return "/home" if redirect is null', () => {
-    const redirect = null
-    const result = getSafeRedirect(redirect)
+    const result = getSafeRedirect(null)
     expect(result).toBe('/home')
   })
 })
