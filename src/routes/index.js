@@ -4,7 +4,7 @@ export default {
   options: {
     auth: { mode: 'try' }
   },
-  handler: (request, h) => {
+  handler: (_request, h) => {
     return h.view('index')
   }
 }

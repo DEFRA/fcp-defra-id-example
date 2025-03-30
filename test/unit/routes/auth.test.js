@@ -4,7 +4,7 @@ let route
 
 describe('auth', () => {
   beforeEach(() => {
-    route = undefined
+    route = null
   })
 
   test('should return an array of routes', () => {

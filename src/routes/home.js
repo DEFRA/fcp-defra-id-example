@@ -4,7 +4,7 @@ export default {
   options: {
     auth: { scope: ['user'] }
   },
-  handler: (request, h) => {
+  handler: (_request, h) => {
     return h.view('home')
   }
 }

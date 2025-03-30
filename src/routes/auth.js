@@ -10,7 +10,7 @@ export default [{
   options: {
     auth: 'defra-id'
   },
-  handler: function (request, h) {
+  handler: function (_request, h) {
     return h.redirect('/home')
   }
 }, {
