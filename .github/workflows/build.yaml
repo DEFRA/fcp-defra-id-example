@@ -23,7 +23,7 @@ jobs:
       run: mkdir -p test-output
     
     - name: Run tests
-      run: docker compose -f compose.yaml -f compose.test.yaml --rm run
+      run: docker compose -f compose.yaml -f compose.test.yaml run --rm
 
     - name: Update coverage paths
       run: sed -i -e 's/\\/home\\/node/./g' ./test-output/lcov.info
