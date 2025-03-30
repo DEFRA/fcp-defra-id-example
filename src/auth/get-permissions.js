@@ -22,8 +22,8 @@ async function getPersonId (headers) {
   // PATH: /person/3337243/summary
   // METHOD: GET
   // HEADERS:
-  //   crn: <crn>
-  //   Authorization <token>
+  //   crn: <headers.crn>
+  //   Authorization <headers.token>
 
   const mockResponse = {
     _data: {
@@ -60,8 +60,8 @@ async function getRolesAndPrivileges (personId, organisationId, { headers }) {
   // PATH: /SitiAgriApi/authorisation/organisation/<organisationId>/authorisation
   // METHOD: GET
   // HEADERS:
-  //   crn: <personId>
-  //   Authorization <token>
+  //   crn: <headers.crn>
+  //   Authorization <headers.token>
 
   const mockResponse = {
     data: {
