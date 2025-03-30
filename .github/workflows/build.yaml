@@ -2,26 +2,37 @@ name: build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
+    - name: Create test output directory
+      run: mkdir -p test-output
+    
+    - name: Run tests
+      run: docker compose -f compose.yaml -f compose.test.yaml --rm run
+
+    - name: Update coverage paths
+      run: sed -i -e 's/\\/home\\/node/./g' ./test-output/lcov.info
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag fcp-defra-id-example
-
-  sonarqube:
-    name: SonarQube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
