@@ -3,8 +3,9 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
+[![Known Vulnerabilities](https://snyk.io/test/github/defra/fcp-defra-id-example/badge.svg)](https://snyk.io/test/github/defra/fcp-defra-id-example)
 
 This is an example service that demonstrates how to use the Defra Identity service to authenticate users within the Farming and Countryside programme (FCP).
 
