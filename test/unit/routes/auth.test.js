@@ -13,7 +13,7 @@ describe('auth', () => {
 
   describe('GET /auth/sign-in', () => {
     beforeEach(() => {
-      route = routes.find(r => r.method === 'GET' && r.path === '/auth/sign-in')
+      route = getRoute('GET', '/auth/sign-in')
     })
 
     test('should exist', () => {
@@ -31,7 +31,7 @@ describe('auth', () => {
 
   describe('GET /auth/sign-in-oidc', () => {
     beforeEach(() => {
-      route = routes.find(r => r.method === 'GET' && r.path === '/auth/sign-in-oidc')
+      route = getRoute('GET', '/auth/sign-in-oidc')
     })
 
     test('should exist', () => {
@@ -50,7 +50,7 @@ describe('auth', () => {
 
   describe('GET /auth/sign-out', () => {
     beforeEach(() => {
-      route = routes.find(r => r.method === 'GET' && r.path === '/auth/sign-out')
+      route = getRoute('GET', '/auth/sign-out')
     })
 
     test('should exist', () => {
@@ -68,7 +68,7 @@ describe('auth', () => {
 
   describe('GET /auth/sign-out-oidc', () => {
     beforeEach(() => {
-      route = routes.find(r => r.method === 'GET' && r.path === '/auth/sign-out-oidc')
+      route = getRoute('GET', '/auth/sign-out-oidc')
     })
 
     test('should exist', () => {
@@ -87,7 +87,7 @@ describe('auth', () => {
 
   describe('GET /auth/organisation', () => {
     beforeEach(() => {
-      route = routes.find(r => r.method === 'GET' && r.path === '/auth/organisation')
+      route = getRoute('GET', '/auth/organisation')
     })
 
     test('should exist', () => {
@@ -103,3 +103,7 @@ describe('auth', () => {
     })
   })
 })
+
+function getRoute (method, path) {
+  return routes.find(r => r.method === method && r.path === path)
+}
