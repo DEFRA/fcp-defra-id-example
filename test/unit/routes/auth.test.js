@@ -50,7 +50,7 @@ describe('auth', () => {
 
   describe('GET /auth/sign-out', () => {
     beforeEach(() => {
-      route = routes.find(route => route.method === 'GET' && route.path === '/auth/sign-out')
+      route = routes.find(r => r.method === 'GET' && r.path === '/auth/sign-out')
     })
 
     test('should exist', () => {
