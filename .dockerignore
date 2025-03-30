@@ -1,8 +1,6 @@
 node_modules
 Dockerfile
 .dockerignore
-docs
-helm
 docker-compose*
 .secrets.baseline
 .pre-commit-config.yaml
