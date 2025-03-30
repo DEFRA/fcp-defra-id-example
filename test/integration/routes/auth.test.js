@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import '../helpers/setup-server-mocks.js'
+import { mockOidcConfig } from '../helpers/setup-server-mocks.js'
 
 const { createServer } = await import('../../../src/server.js')
 
@@ -41,7 +41,7 @@ describe('auth routes', () => {
         url: '/auth/sign-in'
       })
       expect(response.statusCode).toBe(302)
-      expect(response.headers.location.startsWith('https://oidc.example.com/authorize')).toBe(true)
+      expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
     })
   })
 })
