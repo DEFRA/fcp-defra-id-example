@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Create test output directory
-      run: mkdir -p test-output
+      run: mkdir -p -m 777 test-output
     
     - name: Run tests
       run: ./scripts/test
