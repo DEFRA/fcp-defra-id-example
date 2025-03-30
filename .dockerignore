@@ -8,3 +8,4 @@ LICENCE
 README.md
 .vscode
 .gitignore
+.env
