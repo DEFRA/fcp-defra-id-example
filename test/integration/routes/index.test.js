@@ -19,19 +19,12 @@ describe('index route', () => {
     }
   })
 
-  test('GET / returns a 200 response', async () => {
-    const response = await server.inject({
-      method: 'GET',
-      url: '/'
-    })
-    expect(response.statusCode).toBe(200)
-  })
-
   test('GET / returns index view', async () => {
     const response = await server.inject({
       method: 'GET',
       url: '/'
     })
+    expect(response.statusCode).toBe(200)
     expect(response.request.response.source.template).toBe('index')
   })
 })
