@@ -1,4 +1,4 @@
-const route = {
+export default {
   method: 'GET',
   path: '/',
   options: {
@@ -8,5 +8,3 @@ const route = {
     return h.view('index')
   }
 }
-
-export default route

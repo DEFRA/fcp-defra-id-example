@@ -1,7 +1,7 @@
 export default {
   plugin: {
     name: 'sso',
-    register: (server, options) => {
+    register: (server, _options) => {
       server.ext('onRequest', (request, h) => {
         // If the user has already selected an organisation in another service, pass the organisation Id to force Defra Id to skip the organisation selection screen
         if (request.query.ssoOrgId) {

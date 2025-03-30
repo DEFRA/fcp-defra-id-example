@@ -4,7 +4,7 @@ import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 
-const routes = [{
+export default [{
   method: 'GET',
   path: '/auth/sign-in',
   options: {
@@ -92,5 +92,3 @@ const routes = [{
     return h.redirect(safeRedirect)
   }
 }]
-
-export default routes
