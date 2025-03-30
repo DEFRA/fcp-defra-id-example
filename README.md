@@ -1,5 +1,6 @@
 # FCP Defra Identity example
 
+![Build](https://github.com/defra/fcp-defra-id-example/actions/workflows/build.yaml/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
