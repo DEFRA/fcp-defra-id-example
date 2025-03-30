@@ -29,13 +29,12 @@ jobs:
       run: ./scripts/test
 
     - name: Update coverage paths
-      run: sed -i -e 's/\\/home\\/node/./g' ./test-output/lcov.info
+      run: sed -i -e 's|/home/node|.|g' ./test-output/lcov.info
 
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag fcp-defra-id-example
