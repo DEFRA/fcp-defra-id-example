@@ -11,6 +11,9 @@
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand",
     "test:lint": "standard",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache",
+    "docker:test": "docker compose -f compose.yaml -f compose.test.yaml -p fcp-defra-id-example-test run --rm fcp-defra-id-example",
+    "docker:test:watch": "docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -p fcp-defra-id-example-test run --rm fcp-defra-id-example",
+    "docker:test:debug": "docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -f compose.test.debug.yaml -p fcp-defra-id-example-test run --rm --service-ports fcp-defra-id-example",
     "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch src/index.js",
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch src/index.js"
   },

@@ -26,7 +26,7 @@ jobs:
       run: mkdir -p -m 777 test-output
     
     - name: Run tests
-      run: ./scripts/test
+      run: npm run docker:test
 
     - name: Update coverage paths
       run: sed -i -e 's|/home/node|.|g' ./test-output/lcov.info

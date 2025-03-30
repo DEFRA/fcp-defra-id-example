@@ -91,20 +91,18 @@ docker compose up
 
 ### Running tests
 
-A convenience script is provided to run automated tests in a containerised
-environment. This will rebuild images before running tests via docker compose,
-using a combination of `compose.yaml` and `compose.test.yaml`.
-The command given to `compose run` may be customised by passing
-arguments to the test script.
-
-Examples:
+Convenience scripts have been provided to run automated tests in a containerised
+environment. 
 
 ```bash
 # Run all tests
-scripts/test
+npm run docker:test
 
 # Run tests with file watch
-scripts/test -w
+npm run docker:test:watch
+
+# Debug tests
+npm run docker:test:debug
 ```
 
 ## Patterns
