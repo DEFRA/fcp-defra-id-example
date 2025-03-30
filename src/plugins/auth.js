@@ -80,7 +80,7 @@ function getBellOptions (oidcConfig) {
       return params
     },
     password: config.get('cookie.password'),
-    isSecure: !config.get('isDev')
+    isSecure: config.get('isProd')
   }
 }
 

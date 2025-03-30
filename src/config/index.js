@@ -17,6 +17,11 @@ const config = convict({
     format: Boolean,
     default: process.env.NODE_ENV === 'development'
   },
+  isProd: {
+    doc: 'True if the application is in production mode.',
+    format: Boolean,
+    default: process.env.NODE_ENV === 'production'
+  },
   host: {
     doc: 'The host to bind.',
     format: 'ipaddress',
