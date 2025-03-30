@@ -8,7 +8,7 @@ async function getPermissions (crn, organisationId, token) {
   // 1. Get personId from RPS API
   const personId = await getPersonId(crn, token)
   // 2. Get roles and privileges from Siti Agri API
-  const { role, privileges } = await getRolesAndPrivileges(personId, organisationId, token)
+  const { role, privileges } = await getRolesAndPrivileges(crn, personId, organisationId, token)
   // 3. Map roles and privileges to scope
   // An application specific permission is added to demonstrate how to add local, non-Siti Agri permissions
   const scope = [DEFAULT_SCOPE, ...privileges]
@@ -54,7 +54,7 @@ async function getPersonId (crn, token) {
   return mockResponse._data.id
 }
 
-async function getRolesAndPrivileges (personId, organisationId, token) {
+async function getRolesAndPrivileges (crn, personId, organisationId, token) {
   // simulate call to Siti Agri API
   // returns all roles and privileges for so need to filter for logged in user
   // PATH: /SitiAgriApi/authorisation/organisation/<organisationId>/authorisation
