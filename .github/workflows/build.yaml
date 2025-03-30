@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Create test output directory
       run: mkdir -p test-output
     
