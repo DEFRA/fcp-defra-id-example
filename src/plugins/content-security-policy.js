@@ -1,6 +1,6 @@
 import Blankie from 'blankie'
 
-const plugin = {
+export default {
   plugin: Blankie,
   options: {
     fontSrc: ['self'],
@@ -12,5 +12,3 @@ const plugin = {
     generateNonces: false
   }
 }
-
-export default plugin

@@ -4,7 +4,7 @@ import { refreshTokens } from '../auth/refresh-tokens.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 import config from '../config/index.js'
 
-const plugin = {
+export default {
   plugin: {
     name: 'auth',
     register: async (server) => {
@@ -113,5 +113,3 @@ const plugin = {
     }
   }
 }
-
-export default plugin

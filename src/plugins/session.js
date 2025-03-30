@@ -5,7 +5,7 @@ import config from '../config/index.js'
 // Yar is used to store temporary session data not dependent on the user's authentication status
 // such as state values used to prevent CSRF attacks and redirect URLs
 // Token set to Lax to ensure redirect from Defra Identity can access credentials data
-const plugin = {
+export default {
   plugin: Yar,
   options: {
     storeBlank: false,
@@ -21,5 +21,3 @@ const plugin = {
     }
   }
 }
-
-export default plugin

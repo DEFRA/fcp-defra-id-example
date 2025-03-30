@@ -1,7 +1,4 @@
 import convict from 'convict'
-import convictFormatWithValidator from 'convict-format-with-validator'
-
-convict.addFormats(convictFormatWithValidator)
 
 const config = convict({
   name: {

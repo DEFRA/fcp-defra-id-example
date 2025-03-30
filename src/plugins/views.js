@@ -6,7 +6,7 @@ import config from '../config/index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const plugin = {
+export default {
   plugin: Vision,
   options: {
     engines: {
@@ -45,5 +45,3 @@ const plugin = {
     }
   }
 }
-
-export default plugin

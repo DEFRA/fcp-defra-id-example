@@ -3,7 +3,7 @@ import auth from '../routes/auth.js'
 import index from '../routes/index.js'
 import home from '../routes/home.js'
 
-const router = {
+export default {
   plugin: {
     name: 'router',
     register: (server, _options) => {
@@ -16,5 +16,3 @@ const router = {
     }
   }
 }
-
-export default router

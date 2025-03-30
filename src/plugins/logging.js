@@ -1,11 +1,9 @@
 import HapiPino from 'hapi-pino'
 import config from '../config/index.js'
 
-const logging = {
+export default {
   plugin: HapiPino,
   options: {
     level: config.get('isDev') ? 'info' : 'warn'
   }
 }
-
-export default logging

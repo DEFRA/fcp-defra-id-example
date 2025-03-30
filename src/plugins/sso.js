@@ -1,4 +1,4 @@
-const plugin = {
+export default {
   plugin: {
     name: 'sso',
     register: (server, options) => {
@@ -16,5 +16,3 @@ const plugin = {
     }
   }
 }
-
-export default plugin

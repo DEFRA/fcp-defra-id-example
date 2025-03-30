@@ -1,4 +1,4 @@
-const plugin = {
+export default {
   plugin: {
     name: 'headers',
     register: (server, _options) => {
@@ -32,5 +32,3 @@ const plugin = {
     }
   }
 }
-
-export default plugin
