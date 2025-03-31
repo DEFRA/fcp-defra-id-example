@@ -36,7 +36,7 @@ function getBellOptions (oidcConfig) {
       auth: oidcConfig.authorization_endpoint,
       token: oidcConfig.token_endpoint,
       scope: ['openid', 'offline_access', config.get('defraId.clientId')],
-      profile: async function (credentials, _params, _get) {
+      profile: function (credentials, _params, _get) {
         const payload = Jwt.token.decode(credentials.token).decoded.payload
 
         // Map all JWT properties to the credentials object so it can be stored in the session
@@ -49,6 +49,10 @@ function getBellOptions (oidcConfig) {
         }
       }
     },
+    clientId: config.get('defraId.clientId'),
+    clientSecret: config.get('defraId.clientSecret'),
+    password: config.get('cookie.password'),
+    isSecure: config.get('isProd'),
     location: function (request) {
       // If request includes a redirect query parameter, store it in the session to allow redirection after authentication
       if (request.query.redirect) {
@@ -59,10 +63,6 @@ function getBellOptions (oidcConfig) {
 
       return config.get('defraId.redirectUrl')
     },
-    clientId: config.get('defraId.clientId'),
-    clientSecret: config.get('defraId.clientSecret'),
-    password: config.get('cookie.password'),
-    isSecure: config.get('isProd'),
     providerParams: function (request) {
       const params = {
         serviceId: config.get('defraId.serviceId'),

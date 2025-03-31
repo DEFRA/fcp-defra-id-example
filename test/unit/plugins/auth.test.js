@@ -1,6 +1,7 @@
+import { generateKeyPairSync } from 'crypto'
 import { jest } from '@jest/globals'
 import { mockOidcConfig } from '../../integration/helpers/setup-server-mocks.js'
-// import auth, { getBellOptions } from '../../../src/plugins/auth.js'
+import Jwt from '@hapi/jwt'
 
 const mockConfigGet = jest.fn()
 jest.unstable_mockModule('../../../src/config/index.js', () => ({
@@ -69,8 +70,16 @@ describe('auth', () => {
       expect(getBellOptions(mockOidcConfig).isSecure).toBe(true)
     })
 
+    test('should have a location function', () => {
+      expect(getBellOptions(mockOidcConfig).location).toBeInstanceOf(Function)
+    })
+
     test('should have a providerParams function', () => {
       expect(getBellOptions(mockOidcConfig).providerParams).toBeInstanceOf(Function)
+    })
+
+    describe('location', () => {
+
     })
 
     describe('providerParams', () => {
@@ -108,7 +117,7 @@ describe('auth', () => {
         expect(providerParams(request).relationshipId).toBe('1234567')
       })
 
-      test('should not include relationshipId if request path is not /auth/organisation and query includes organisationId', () => {        
+      test('should not include relationshipId if request path is not /auth/organisation and query includes organisationId', () => {
         request.path = '/some/other/path'
         request.query.organisationId = '1234567'
         expect(providerParams(request).relationshipId).toBeUndefined()
@@ -148,8 +157,75 @@ describe('auth', () => {
         expect(getBellOptions(mockOidcConfig).provider.profile).toBeInstanceOf(Function)
       })
 
-      test('should have a location function', () => {
-        expect(getBellOptions(mockOidcConfig).location).toBeInstanceOf(Function)
+      describe('profile', () => {
+        const { privateKey } = generateKeyPairSync('rsa', {
+          modulusLength: 4096,
+          publicKeyEncoding: {
+            type: 'spki',
+            format: 'jwk'
+          },
+          privateKeyEncoding: {
+            type: 'pkcs8',
+            format: 'pem'
+          }
+        })
+
+        const jwtSpy = jest.spyOn(Jwt.token, 'decode')
+
+        const profile = getBellOptions(mockOidcConfig).provider.profile
+        const token = {
+          contactId: '1234567890',
+          firstName: 'Andrew',
+          lastName: 'Farmer',
+          currentRelationshipId: '1234567',
+          sessionId: 'session-id'
+        }
+
+        let credentials
+        let encodedToken
+
+        beforeEach(() => {
+          jest.clearAllMocks()
+          encodedToken = Jwt.token.generate(token, { key: privateKey, algorithm: 'RS256' })
+          credentials = { token: encodedToken }
+        })
+
+        test('should decode token provide from Defra Identity', () => {
+          profile(credentials)
+          expect(jwtSpy).toHaveBeenCalledWith(credentials.token)
+        })
+
+        test('should throw error if token is not provided', () => {
+          credentials.token = null
+          expect(() => profile(credentials)).toThrow()
+        })
+
+        test('should throw error if Jwt library throws error', () => {
+          jwtSpy.mockImplementationOnce(() => {
+            throw new Error('Test error')
+          })
+          expect(() => profile(credentials)).toThrow('Test error')
+        })
+
+        test('should populate credentials profile with decoded token payload', () => {
+          profile(credentials)
+          expect(credentials.profile).toMatchObject({ ...token })
+        })
+
+        test('should add crn property to credentials profile', () => {
+          profile(credentials)
+          expect(credentials.profile.crn).toBe(token.contactId)
+        })
+
+        test('should add name property to credentials profile', () => {
+          profile(credentials)
+          expect(credentials.profile.name).toBe(`${token.firstName} ${token.lastName}`)
+        })
+
+        test('should add organisationId property to credentials profile', () => {
+          profile(credentials)
+          expect(credentials.profile.organisationId).toBe(token.currentRelationshipId)
+        })
       })
     })
   })
