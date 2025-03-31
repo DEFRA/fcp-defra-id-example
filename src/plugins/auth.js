@@ -61,6 +61,8 @@ function getBellOptions (oidcConfig) {
     },
     clientId: config.get('defraId.clientId'),
     clientSecret: config.get('defraId.clientSecret'),
+    password: config.get('cookie.password'),
+    isSecure: config.get('isProd'),
     providerParams: function (request) {
       const params = {
         serviceId: config.get('defraId.serviceId'),
@@ -78,9 +80,7 @@ function getBellOptions (oidcConfig) {
       }
 
       return params
-    },
-    password: config.get('cookie.password'),
-    isSecure: config.get('isProd')
+    }
   }
 }
 
