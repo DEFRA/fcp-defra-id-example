@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 
-describe('defra identity config', () => {
+describe('Defra Identity config', () => {
   beforeEach(() => {
     jest.resetModules()
     process.env.DEFRA_ID_WELL_KNOWN_URL = 'mockWellKnownUrl'

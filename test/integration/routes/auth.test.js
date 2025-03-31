@@ -107,6 +107,23 @@ describe('auth routes', () => {
       mockGetPermissions.mockResolvedValue({ role, scope })
     })
 
+    test('redirects to oidc sign in page if unauthenticated', async () => {
+      const response = await server.inject({
+        url: path
+      })
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
+    })
+
+    // test('should return unauthorised view if unauthenticated but redirected from Defra Identity', async () => {
+    //   const response = await server.inject({
+    //     url: `${path}?state=POivVXGxcRSmDcFTldSDfX&code=eyJraWQiOiJKUDVRTGEyNVlweEhNWnpMZzNsYXVpRll4NF8yV2w2b2VoWlNKQ0Z4RTU0IiwidmVyIjoiMS4wIiwiemlwIjoiRGVmbGF0ZSIsInNlciI6IjEuMCJ9.kgGAk9UnDbjBp4Vv0ZPpEmH6jNP7rk5Zs1k48uBnHInBbwf5uTCcbLr3EoxbEOi5JHiVnxnbsCCEmXY-YQ52jQn2z3zISo3uWRvuiyccvnW09cD1aEgVvUS6dJ7xIgZqYt8gJExKvLZ3EYvB94nlUsPTSslSVmxPdGzUNfJ9QiD_CV3CJQnw9yAIw_c7Rc8FJGgArOG3JTdlcb37mgd_BAZKKbU-MGMdcBsdQpBN5KvL0A5kvA98Eb_8hMaRlXY2W30yRKusteb2CLvVeeXtviPsaimO_XBwZPYKAIpFmSg5vwx-ywh_SpAmxNFw0sxhGWSW4n2BRd-IEundYhYNnA.0q5qPNM-NZ18L8vp.hWNwXFRpxLnvgMkkNv7saDkM9V5ivNrWQHlW9AhTCZhzumeltOP8W6EeGYoZoM8VlPFruiJWPb6xXwGsMeA_7r9E4ZoJQLQeUdULdR5iHyH9amJWvTx7hm2OIvrKMC6HSyB-ppD7e792JpTpsp1Hmom8O5zWRZUgVthusd8b5I3HyPMFU29DaB7cdiDTP-qgOxwAag8dngIuwfRpjg6Pvlly5qb-8FIP6eH1Z5Sl20Kz0viqk52Ef7ynHjbbv3ZAkWm18y1XPgiAi5NeToDlc46KUdEGaDj67A5qo-3xL4UkCVLMD6arPYb83KvgsK-ywa9gKsXymRR8d3kuLCzox2-TEvVhLgePTHQc_rpZMdZTaC-gTT7z_AnqYTPBwdpuSICDaxl8I6d2-iYwhG07lIgYgjfhLDqsHmOLfOMpvTx_oFgMPwsSNfhxhTg_Ce6e4DOaS6C3yFj27R0zAdox4vrjTWGrBHiJAGVDvk9PGDkkuokdUCnvfdHsr9UumE9sHforsHYIz8AWlm7GgAV7ftzW1gF9gjaGTm_N-DAShgEkP1s4WKas7gru2CYQ67Pemu0DWTYYTuQmf_g3aINrmv0jFN_H-29lTW554skQYuJRSq1bDbrSvvFNjPEMfWqGQO5f5UG3eVGf1B2UQvkN_j-ntN7NvO9BPB6odoFikN6v9iIZUJWyfyi_8-g52PrMdJVgFDuCoagTvaAhYFN62bKX8wGQlRWlJL6GYWfxbw2Np9VYu03u6p1NvdoPRQUQ86VJCLaRi4bvDRkrDNm1dqD0zAxTdnFMFZAvJamF-E56Xf2c805fGoGHuWCzDP6FD-eF0efxa8tU_os8ox3MHQw7wkWMtLZI1DvR1LHysVt8rgAf-rqogveisBY-SPKrADAvD79aCPSpdMvA2TTf-gAUjxFdZX2NLuugVxV6-cPRItmNpGH_a0iecwNxrSB1JlXKlqfwjjhFOAlvIG4J_g4.69aelVPz-m0NxM5fFZhtLw`,
+    //   })
+    //   console.log(response.headers.location)
+    //   console.log(response.statusCode)
+    //   expect(response.request.response.source.template).toBe('unauthorised')
+    // })
+
     test('should verify JWT token against public key', async () => {
       await server.inject({
         url: path,
@@ -247,14 +264,6 @@ describe('auth routes', () => {
       })
       expect(response.statusCode).toBe(302)
       expect(response.headers.location).toBe('/home')
-    })
-
-    test('redirects to oidc sign in page if unauthenticated', async () => {
-      const response = await server.inject({
-        url: path
-      })
-      expect(response.statusCode).toBe(302)
-      expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
     })
   })
 

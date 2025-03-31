@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 import defraId from '../../../src/config/defra-id.js'
 import cache from '../../../src/config/cache.js'
 
-describe('defra identity config', () => {
+describe('Defra Identity config', () => {
   beforeEach(() => {
     jest.resetModules()
     process.env.NODE_ENV = 'test'

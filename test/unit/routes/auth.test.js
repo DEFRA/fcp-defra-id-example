@@ -20,7 +20,7 @@ describe('auth', () => {
       expect(route).toBeDefined()
     })
 
-    test('should require authentication with defra identity', () => {
+    test('should require authentication with Defra Identity', () => {
       expect(route.options.auth).toBe('defra-id')
     })
 
@@ -38,7 +38,7 @@ describe('auth', () => {
       expect(route).toBeDefined()
     })
 
-    test('should attempt authentication with defra identity', () => {
+    test('should attempt authentication with Defra Identity', () => {
       expect(route.options.auth.strategy).toBe('defra-id')
       expect(route.options.auth.mode).toBe('try')
     })
@@ -95,7 +95,7 @@ describe('auth', () => {
       expect(route).toBeDefined()
     })
 
-    test('should require authentication with defra identity', () => {
+    test('should require authentication with Defra Identity', () => {
       expect(route.options.auth).toBe('defra-id')
     })
 
