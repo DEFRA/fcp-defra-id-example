@@ -375,7 +375,7 @@ describe('auth routes', () => {
           strategy: 'session',
           credentials: {
             ...credentials,
-            profile: { ...credentials.profile, sessionId: undefined }
+            sessionId: null
           }
         }
       })
