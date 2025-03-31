@@ -98,7 +98,12 @@ function getCookieOptions () {
     validate: async function (request, session) {
       const userSession = await request.server.app.cache.get(session.sessionId)
 
-      // verify Defra Identity token has not expired
+      // If session does not exist, return an invalid session
+      if (!userSession) {
+        return { isValid: false }
+      }
+
+      // Verify Defra Identity token has not expired
       try {
         const decoded = Jwt.token.decode(userSession.token)
         Jwt.token.verifyTime(decoded)
@@ -112,12 +117,9 @@ function getCookieOptions () {
         await request.server.app.cache.set(session.sessionId, userSession)
       }
 
-      // If session exists, set the user's details on the request object and allow the request to continue
-      // Depending on the service, additional checks can be performed here
-      if (userSession) {
-        return { isValid: true, credentials: userSession }
-      }
-      return { isValid: false }
+      // Set the user's details on the request object and allow the request to continue
+      // Depending on the service, additional checks can be performed here before returning `isValid: true`
+      return { isValid: true, credentials: userSession }
     }
   }
 }

@@ -3,6 +3,9 @@ import { jest } from '@jest/globals'
 import { mockOidcConfig } from '../../integration/helpers/setup-server-mocks.js'
 import Jwt from '@hapi/jwt'
 
+const jwtDecodeSpy = jest.spyOn(Jwt.token, 'decode')
+const jwtVerifyTimeSpy = jest.spyOn(Jwt.token, 'verifyTime')
+
 const mockConfigGet = jest.fn()
 jest.unstable_mockModule('../../../src/config/index.js', () => ({
   default: {
@@ -14,6 +17,33 @@ const mockGetSafeRedirect = jest.fn()
 jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
   getSafeRedirect: mockGetSafeRedirect
 }))
+
+const mockRefreshTokens = jest.fn()
+jest.unstable_mockModule('../../../src/auth/refresh-tokens.js', () => ({
+  refreshTokens: mockRefreshTokens
+}))
+
+const { privateKey } = generateKeyPairSync('rsa', {
+  modulusLength: 4096,
+  publicKeyEncoding: {
+    type: 'spki',
+    format: 'jwk'
+  },
+  privateKeyEncoding: {
+    type: 'pkcs8',
+    format: 'pem'
+  }
+})
+
+const token = {
+  contactId: '1234567890',
+  firstName: 'Andrew',
+  lastName: 'Farmer',
+  currentRelationshipId: '1234567',
+  sessionId: 'session-id'
+}
+
+const refreshToken = 'DEFRA-ID-REFRESH-TOKEN'
 
 const { default: auth, getBellOptions, getCookieOptions } = await import('../../../src/plugins/auth.js')
 
@@ -32,6 +62,8 @@ describe('auth', () => {
           return 'mockPolicy'
         case 'defraId.redirectUrl':
           return 'mockRedirectUrl'
+        case 'defraId.refreshTokens':
+          return true
         case 'cookie.password':
           return 'mockPassword'
         case 'isProd':
@@ -191,28 +223,7 @@ describe('auth', () => {
       })
 
       describe('profile', () => {
-        const { privateKey } = generateKeyPairSync('rsa', {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: 'spki',
-            format: 'jwk'
-          },
-          privateKeyEncoding: {
-            type: 'pkcs8',
-            format: 'pem'
-          }
-        })
-
-        const jwtSpy = jest.spyOn(Jwt.token, 'decode')
-
         const profile = getBellOptions(mockOidcConfig).provider.profile
-        const token = {
-          contactId: '1234567890',
-          firstName: 'Andrew',
-          lastName: 'Farmer',
-          currentRelationshipId: '1234567',
-          sessionId: 'session-id'
-        }
 
         let credentials
         let encodedToken
@@ -225,7 +236,7 @@ describe('auth', () => {
 
         test('should decode token provide from Defra Identity', () => {
           profile(credentials)
-          expect(jwtSpy).toHaveBeenCalledWith(credentials.token)
+          expect(jwtDecodeSpy).toHaveBeenCalledWith(credentials.token)
         })
 
         test('should throw error if token is not provided', () => {
@@ -234,7 +245,7 @@ describe('auth', () => {
         })
 
         test('should throw error if Jwt library throws error', () => {
-          jwtSpy.mockImplementationOnce(() => {
+          jwtDecodeSpy.mockImplementationOnce(() => {
             throw new Error('Test error')
           })
           expect(() => profile(credentials)).toThrow('Test error')
@@ -313,6 +324,115 @@ describe('auth', () => {
 
       test('should include redirect param in redirection to intended path', () => {
         expect(redirectTo(request)).toContain('redirect=/home?query=string')
+      })
+    })
+
+    describe('validate', () => {
+      const validate = getCookieOptions().validate
+      const mockCacheGet = jest.fn()
+      const mockCacheSet = jest.fn()
+      const request = {
+        server: {
+          app: {
+            cache: {
+              get: mockCacheGet,
+              set: mockCacheSet
+            }
+          }
+        }
+      }
+      const session = {
+        sessionId: 'session-id',
+        refreshToken
+      }
+
+      let userSession
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+        const encodedToken = Jwt.token.generate(token, { key: privateKey, algorithm: 'RS256' })
+        session.token = encodedToken
+
+        userSession = {
+          token: encodedToken,
+          refreshToken
+        }
+
+        mockRefreshTokens.mockResolvedValue({
+          access_token: encodedToken,
+          refresh_token: refreshToken
+        })
+
+        mockCacheGet.mockResolvedValue(userSession)
+      })
+
+      test('should return an object', async () => {
+        const result = await validate(request, session)
+        expect(result).toBeInstanceOf(Object)
+      })
+
+      test('should get session from cache', async () => {
+        await validate(request, session)
+        expect(mockCacheGet).toHaveBeenCalledWith(session.sessionId)
+      })
+
+      test('should decode token from session', async () => {
+        await validate(request, session)
+        expect(jwtDecodeSpy).toHaveBeenCalledWith(session.token)
+      })
+
+      test('should verify token time', async () => {
+        await validate(request, session)
+        expect(jwtVerifyTimeSpy).toHaveBeenCalled()
+      })
+
+      test('should return valid state if session exists and token is valid', async () => {
+        const result = await validate(request, session)
+        expect(result.isValid).toBe(true)
+      })
+
+      test('should add credentials as session data to request if session exists and token is valid', async () => {
+        const result = await validate(request, session)
+        expect(result.credentials).toEqual(userSession)
+      })
+
+      test('should return invalid state if session does not exist', async () => {
+        mockCacheGet.mockResolvedValue(null)
+        const result = await validate(request, session)
+        expect(result.isValid).toBe(false)
+      })
+
+      test('should return invalid state if token has expired and refresh tokens are disabled', async () => {
+        jwtVerifyTimeSpy.mockImplementationOnce(() => {
+          throw new Error('Invalid token')
+        })
+        mockConfigGet.mockReturnValueOnce(false)
+        const result = await validate(request, session)
+        expect(result.isValid).toBe(false)
+      })
+
+      test('should refresh tokens if token is has expired and refresh tokens are enabled', async () => {
+        jwtVerifyTimeSpy.mockImplementationOnce(() => {
+          throw new Error('Invalid token')
+        })
+        await validate(request, session)
+        expect(mockRefreshTokens).toHaveBeenCalledWith(refreshToken)
+      })
+
+      test('should overwrite session data in cache if tokens are refreshed', async () => {
+        jwtVerifyTimeSpy.mockImplementationOnce(() => {
+          throw new Error('Invalid token')
+        })
+        await validate(request, session)
+        expect(mockCacheSet).toHaveBeenCalledWith(session.sessionId, userSession)
+      })
+
+      test('should return valid state if tokens are refreshed', async () => {
+        jwtVerifyTimeSpy.mockImplementationOnce(() => {
+          throw new Error('Invalid token')
+        })
+        const result = await validate(request, session)
+        expect(result.isValid).toBe(true)
       })
     })
   })
