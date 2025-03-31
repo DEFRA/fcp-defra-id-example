@@ -20,7 +20,7 @@ export default {
         },
         prepare: (options, next) => {
           options.compileOptions.environment = nunjucks.configure([
-            path.join(options.relativeTo || process.cwd(), options.path),
+            path.join(options.relativeTo, options.path),
             'node_modules/govuk-frontend/dist'
           ], {
             autoescape: true,
