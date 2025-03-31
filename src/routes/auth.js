@@ -94,6 +94,9 @@ export default [{
     auth: 'defra-id'
   },
   handler: async function (request, h) {
+    // Should never be called as the user should no longer be authenticated with `defra-id` after initial sign in
+    // The strategy should redirect the user to the sign in page and they will rejoin the service at the /auth/sign-in-oidc route
+    // Adding as safeguard
     const redirect = request.yar.get('redirect') ?? '/home'
     request.yar.clear('redirect')
     // Ensure redirect is a relative path to prevent redirect attacks

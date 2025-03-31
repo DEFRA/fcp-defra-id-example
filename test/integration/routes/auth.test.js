@@ -86,6 +86,7 @@ describe('auth routes', () => {
       })
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
+
       expect(response.statusCode).toBe(302)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
@@ -402,6 +403,66 @@ describe('auth routes', () => {
       })
       expect(response.statusCode).toBe(302)
       expect(response.headers.location).toBe('/')
+    })
+  })
+
+  describe('GET /auth/organisation', () => {
+    beforeEach(() => {
+      path = '/auth/organisation'
+    })
+
+    test('redirects to oidc sign in', async () => {
+      const response = await server.inject({
+        url: path
+      })
+
+      const redirect = new URL(response.headers.location)
+      const params = new URLSearchParams(redirect.search)
+
+      expect(response.statusCode).toBe(302)
+      expect(redirect.origin).toBe('https://oidc.example.com')
+      expect(redirect.pathname).toBe('/authorize')
+      expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
+      expect(params.get('p')).toBe(process.env.DEFRA_ID_POLICY)
+      expect(params.get('response_mode')).toBe('query')
+      expect(params.get('client_id')).toBe(process.env.DEFRA_ID_CLIENT_ID)
+      expect(params.get('response_type')).toBe('code')
+      expect(params.get('redirect_uri')).toBe(process.env.DEFRA_ID_REDIRECT_URL)
+      expect(params.get('state')).toBeDefined()
+      expect(params.get('scope')).toBe(`openid offline_access ${process.env.DEFRA_ID_CLIENT_ID}`)
+    })
+
+    test('redirects to oidc sign in with "forceReselection" parameter', async () => {
+      const response = await server.inject({
+        url: path
+      })
+
+      const redirect = new URL(response.headers.location)
+      const params = new URLSearchParams(redirect.search)
+
+      expect(params.get('forceReselection')).toBe('true')
+    })
+
+    test('redirects to oidc sign in with "relationshipId" parameter if preselected organisation provided', async () => {
+      const response = await server.inject({
+        url: `${path}?organisationId=1234567`
+      })
+      const redirect = new URL(response.headers.location)
+      const params = new URLSearchParams(redirect.search)
+
+      expect(params.get('relationshipId')).toBe('1234567')
+    })
+
+    test('redirects to safe redirect path if authenticated', async () => {
+      const response = await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/home')
     })
   })
 })
