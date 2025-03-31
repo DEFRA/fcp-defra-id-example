@@ -93,6 +93,64 @@ describe('auth routes', () => {
       expect(response.headers.location).toBe('/home')
     })
 
+    test('should verify JWT token against public key', async () => {
+      await server.inject({
+        method: 'GET',
+        url: '/auth/sign-in-oidc',
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(mockVerifyToken).toHaveBeenCalledWith(credentials.token)
+    })
+
+    test('should return error page if token verification fails', async () => {
+      mockVerifyToken.mockImplementationOnce(() => {
+        throw new Error('Token verification failed')
+      })
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/auth/sign-in-oidc',
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(response.statusCode).toBe(500)
+      expect(response.request.response.source.template).toBe('500')
+    })
+
+    test('should get user permissions', async () => {
+      await server.inject({
+        method: 'GET',
+        url: '/auth/sign-in-oidc',
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(mockGetPermissions).toHaveBeenCalledWith(credentials.profile.crn, credentials.profile.organisationId, credentials.token)
+    })
+
+    test('should return error page if unable to get permissions', async () => {
+      mockGetPermissions.mockImplementationOnce(() => {
+        throw new Error('Unable to get permissions')
+      })
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/auth/sign-in-oidc',
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(response.statusCode).toBe(500)
+      expect(response.request.response.source.template).toBe('500')
+    })
+
     test('redirects to oidc sign in page if unauthenticated and no redirect params', async () => {
       const response = await server.inject({
         method: 'GET',
