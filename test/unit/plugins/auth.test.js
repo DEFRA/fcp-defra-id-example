@@ -15,7 +15,7 @@ jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
   getSafeRedirect: mockGetSafeRedirect
 }))
 
-const { default: auth, getBellOptions } = await import('../../../src/plugins/auth.js')
+const { default: auth, getBellOptions, getCookieOptions } = await import('../../../src/plugins/auth.js')
 
 describe('auth', () => {
   beforeEach(() => {
@@ -259,6 +259,60 @@ describe('auth', () => {
           profile(credentials)
           expect(credentials.profile.organisationId).toBe(token.currentRelationshipId)
         })
+      })
+    })
+  })
+
+  describe('getCookieOptions', () => {
+    test('should return an object', () => {
+      expect(getCookieOptions()).toBeInstanceOf(Object)
+    })
+
+    test('should return a cookie object', () => {
+      expect(getCookieOptions().cookie).toBeInstanceOf(Object)
+    })
+
+    test('should return a redirectTo function', () => {
+      expect(getCookieOptions().redirectTo).toBeInstanceOf(Function)
+    })
+
+    test('should return a validate function', () => {
+      expect(getCookieOptions().validate).toBeInstanceOf(Function)
+    })
+
+    describe('cookie', () => {
+      test('should set cookie password from config', () => {
+        expect(getCookieOptions().cookie.password).toBe('mockPassword')
+      })
+
+      test('should set cookie path to root', () => {
+        expect(getCookieOptions().cookie.path).toBe('/')
+      })
+
+      test('should set isSecure from config', () => {
+        expect(getCookieOptions().cookie.isSecure).toBe(true)
+      })
+
+      test('should set isSameSite to Lax', () => {
+        expect(getCookieOptions().cookie.isSameSite).toBe('Lax')
+      })
+    })
+
+    describe('redirectTo', () => {
+      const redirectTo = getCookieOptions().redirectTo
+      const request = {
+        url: {
+          pathname: '/home',
+          search: '?query=string'
+        }
+      }
+
+      test('should redirect to sign-in route', () => {
+        expect(redirectTo(request).startsWith('/auth/sign-in')).toBe(true)
+      })
+
+      test('should include redirect param in redirection to intended path', () => {
+        expect(redirectTo(request)).toContain('redirect=/home?query=string')
       })
     })
   })
