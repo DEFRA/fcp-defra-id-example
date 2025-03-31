@@ -57,8 +57,9 @@ describe('auth', () => {
       expect(route).toBeDefined()
     })
 
-    test('should use default authentication strategy', () => {
-      expect(route.options?.auth).toBeUndefined()
+    test('should try and authenticate with default authentication strategy', () => {
+      expect(route.options.auth.mode).toBe('try')
+      expect(route.options.auth.strategy).toBeUndefined()
     })
 
     test('should have a handler', () => {

@@ -60,7 +60,13 @@ export default [{
 }, {
   method: 'GET',
   path: '/auth/sign-out',
+  options: {
+    auth: { mode: 'try' }
+  },
   handler: async function (request, h) {
+    if (!request.auth.isAuthenticated) {
+      return h.redirect('/')
+    }
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
     return h.redirect(signOutUrl)
   }
@@ -71,9 +77,12 @@ export default [{
     auth: { mode: 'try' }
   },
   handler: async function (request, h) {
-    validateState(request, request.query.state)
     if (request.auth.isAuthenticated) {
-      await request.server.app.cache.drop(request.auth.credentials?.sessionId)
+      validateState(request, request.query.state)
+      if (request.auth.credentials?.sessionId) {
+        // Clear the session cache
+        await request.server.app.cache.drop(request.auth.credentials.sessionId)
+      }
       request.cookieAuth.clear()
     }
     return h.redirect('/')
