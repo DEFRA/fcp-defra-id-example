@@ -21,7 +21,6 @@ describe('index route', () => {
 
   test('GET / returns index view', async () => {
     const response = await server.inject({
-      method: 'GET',
       url: '/'
     })
     expect(response.statusCode).toBe(200)

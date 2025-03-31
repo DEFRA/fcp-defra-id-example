@@ -5,6 +5,8 @@ const { createServer } = await import('../../../src/server.js')
 
 let server
 
+const path = '/home'
+
 describe('home route', () => {
   beforeAll(async () => {
     jest.clearAllMocks()
@@ -21,8 +23,7 @@ describe('home route', () => {
 
   test('GET /home returns index view if authenticated and has "user" scope', async () => {
     const response = await server.inject({
-      method: 'GET',
-      url: '/home',
+      url: path,
       auth: {
         strategy: 'session',
         credentials: {
@@ -46,8 +47,7 @@ describe('home route', () => {
 
   test('GET /home returns 403 view if authenticated but not in "user" role', async () => {
     const response = await server.inject({
-      method: 'GET',
-      url: '/home',
+      url: path,
       auth: {
         strategy: 'session',
         credentials: {

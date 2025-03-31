@@ -11,6 +11,11 @@ jest.unstable_mockModule('../../../src/auth/get-permissions.js', async () => ({
   getPermissions: mockGetPermissions
 }))
 
+const mockGetSafeRedirect = jest.fn()
+jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
+  getSafeRedirect: mockGetSafeRedirect
+}))
+
 const credentials = {
   profile: {
     sessionId: 'session-id',
@@ -27,12 +32,14 @@ const scope = ['user']
 const { createServer } = await import('../../../src/server.js')
 
 let server
+let path
 
 describe('auth routes', () => {
   beforeAll(async () => {
     jest.clearAllMocks()
 
     mockGetPermissions.mockResolvedValue({ role, scope })
+    mockGetSafeRedirect.mockReturnValue('/home')
 
     server = await createServer()
     await server.initialize()
@@ -45,10 +52,13 @@ describe('auth routes', () => {
   })
 
   describe('GET /auth/sign-in', () => {
+    beforeEach(() => {
+      path = '/auth/sign-in'
+    })
+
     test('redirects to /home if authenticated', async () => {
       const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in',
+        url: path,
         auth: {
           strategy: 'defra-id',
           credentials
@@ -60,8 +70,7 @@ describe('auth routes', () => {
 
     test('redirects to oidc sign in if unauthenticated', async () => {
       const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in'
+        url: path
       })
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
@@ -80,23 +89,13 @@ describe('auth routes', () => {
   })
 
   describe('GET /auth/sign-in-oidc', () => {
-    test('redirects to /home if authenticated and no redirect path in session', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc',
-        auth: {
-          strategy: 'defra-id',
-          credentials
-        }
-      })
-      expect(response.statusCode).toBe(302)
-      expect(response.headers.location).toBe('/home')
+    beforeEach(() => {
+      path = '/auth/sign-in-oidc'
     })
 
     test('should verify JWT token against public key', async () => {
       await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc',
+        url: path,
         auth: {
           strategy: 'defra-id',
           credentials
@@ -111,8 +110,7 @@ describe('auth routes', () => {
       })
 
       const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc',
+        url: path,
         auth: {
           strategy: 'defra-id',
           credentials
@@ -124,8 +122,7 @@ describe('auth routes', () => {
 
     test('should get user permissions', async () => {
       await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc',
+        url: path,
         auth: {
           strategy: 'defra-id',
           credentials
@@ -140,8 +137,7 @@ describe('auth routes', () => {
       })
 
       const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc',
+        url: path,
         auth: {
           strategy: 'defra-id',
           credentials
@@ -151,23 +147,98 @@ describe('auth routes', () => {
       expect(response.request.response.source.template).toBe('500')
     })
 
-    test('redirects to oidc sign in page if unauthenticated and no redirect params', async () => {
+    test('should set authentication status in session cache', async () => {
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      expect(cache.isAuthenticated).toBe(true)
+    })
+
+    test('should set user profile properties at top level in session cache', async () => {
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      expect(cache.crn).toBe(credentials.profile.crn)
+      expect(cache.organisationId).toBe(credentials.profile.organisationId)
+    })
+
+    test('should set user permissions in session cache', async () => {
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      expect(cache.role).toBe(role)
+      expect(cache.scope).toEqual(scope)
+    })
+
+    test('should set token and refresh token in session cache', async () => {
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      expect(cache.token).toBe(credentials.token)
+      expect(cache.refreshToken).toBe(credentials.refreshToken)
+    })
+
+    test('should set cookie session', async () => {
       const response = await server.inject({
-        method: 'GET',
-        url: '/auth/sign-in-oidc'
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      const sessionCookie = response.headers['set-cookie'].find(cookie => cookie.startsWith('sid='))
+      expect(sessionCookie).toBeDefined()
+    })
+
+    test('should ensure redirect path is safe', async () => {
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(mockGetSafeRedirect).toHaveBeenCalledWith('/home')
+    })
+
+    test('redirects to safe redirect path', async () => {
+      const response = await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/home')
+    })
+
+    test('redirects to oidc sign in page if unauthenticated', async () => {
+      const response = await server.inject({
+        url: path
       })
       expect(response.statusCode).toBe(302)
       expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
     })
-
-    // test('returns unauthorised view if not authenticated but redirect params', async () => {
-    //   const response = await server.inject({
-    //     method: 'GET',
-    //     url: '/auth/sign-in-oidc?state=state&code=code'
-    //   })
-    //   console.log(response.payload)
-    //   expect(response.statusCode).toBe(200)
-    //   expect(response.request.response.source.template).toBe('unauthorised')
-    // })
   })
 })

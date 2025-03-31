@@ -21,7 +21,6 @@ describe('assets route', () => {
 
   test('GET /assets returns local asset', async () => {
     const response = await server.inject({
-      method: 'GET',
       url: '/assets/govuk-frontend.min.css'
     })
     expect(response.statusCode).toBe(200)
@@ -29,7 +28,6 @@ describe('assets route', () => {
 
   test('GET /assets returns node_modules asset', async () => {
     const response = await server.inject({
-      method: 'GET',
       url: '/assets/images/favicon.ico'
     })
     expect(response.statusCode).toBe(200)
