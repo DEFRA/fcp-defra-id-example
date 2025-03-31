@@ -10,6 +10,11 @@ jest.unstable_mockModule('../../../src/config/index.js', () => ({
   }
 }))
 
+const mockGetSafeRedirect = jest.fn()
+jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
+  getSafeRedirect: mockGetSafeRedirect
+}))
+
 const { default: auth, getBellOptions } = await import('../../../src/plugins/auth.js')
 
 describe('auth', () => {
@@ -79,7 +84,35 @@ describe('auth', () => {
     })
 
     describe('location', () => {
+      const location = getBellOptions(mockOidcConfig).location
+      let request
 
+      beforeEach(() => {
+        jest.clearAllMocks()
+        mockGetSafeRedirect.mockReturnValue('/home')
+        request = {
+          query: {},
+          yar: {
+            set: jest.fn()
+          }
+        }
+      })
+
+      test('should return redirectUrl from config', () => {
+        expect(location(request)).toBe('mockRedirectUrl')
+      })
+
+      test('should check redirect link is safe if redirect query param is present', () => {
+        request.query.redirect = '/redirect'
+        location(request)
+        expect(mockGetSafeRedirect).toHaveBeenCalledWith('/redirect')
+      })
+
+      test('should set safe redirect path in session if redirect query param is present', () => {
+        request.query.redirect = '/redirect'
+        location(request)
+        expect(request.yar.set).toHaveBeenCalledWith('redirect', '/home')
+      })
     })
 
     describe('providerParams', () => {
