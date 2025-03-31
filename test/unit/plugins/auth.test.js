@@ -102,10 +102,16 @@ describe('auth', () => {
         expect(providerParams(request).forceReselection).toBe(true)
       })
 
-      test('should include relationshipId if request query includes organisationId', () => {
+      test('should include relationshipId if request path is /auth/organisation and query includes organisationId', () => {
         request.path = '/auth/organisation'
         request.query.organisationId = '1234567'
         expect(providerParams(request).relationshipId).toBe('1234567')
+      })
+
+      test('should not include relationshipId if request path is not /auth/organisation and query includes organisationId', () => {        
+        request.path = '/some/other/path'
+        request.query.organisationId = '1234567'
+        expect(providerParams(request).relationshipId).toBeUndefined()
       })
     })
 
