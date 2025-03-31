@@ -7,7 +7,7 @@ const sessionId = 'session-id'
 
 let server
 
-describe('sso plugin', () => {
+describe('sso', () => {
   beforeAll(async () => {
     jest.clearAllMocks()
 

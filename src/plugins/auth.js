@@ -121,3 +121,5 @@ function getCookieOptions () {
     }
   }
 }
+
+export { getBellOptions, getCookieOptions }
