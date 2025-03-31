@@ -86,7 +86,7 @@ async function getRolesAndPrivileges (personId, organisationId, { headers }) {
   }
 
   return {
-    role: mockResponse.data.personRoles.find(role => role.personId === '123456')?.role ?? 'Unknown',
+    role: mockResponse.data.personRoles.find(role => role.personId === '123456').role,
     privileges: mockResponse.data.personPrivileges.filter(privilege => privilege.personId === '123456').map(privilege => privilege.privilegeNames[0])
   }
 }
