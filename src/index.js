@@ -5,8 +5,4 @@ async function init () {
   await server.start()
 }
 
-export { init }
-
-if (import.meta.url === new URL(import.meta.url).href) {
-  await init()
-}
+await init()

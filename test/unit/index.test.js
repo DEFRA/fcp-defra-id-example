@@ -7,15 +7,13 @@ jest.unstable_mockModule('../../src/server.js', () => ({
   }))
 }))
 
-const { init } = await import('../../src/index.js')
-
 describe('start up', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks()
+    await import('../../src/index.js')
   })
 
   test('should start the web server', async () => {
-    await init()
     expect(mockStart).toHaveBeenCalled()
   })
 })
