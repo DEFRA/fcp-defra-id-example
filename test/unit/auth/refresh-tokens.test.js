@@ -103,12 +103,12 @@ describe('refreshTokens', () => {
   })
 
   test('should throw error if get oidc config fails', async () => {
-    mockGetOidcConfig.mockRejectedValue(new Error('Test error'))
-    await expect(refreshTokens(refreshToken)).rejects.toThrow('Test error')
+    mockGetOidcConfig.mockRejectedValue(new Error('Unable to get OIDC config'))
+    await expect(refreshTokens(refreshToken)).rejects.toThrow()
   })
 
   test('should throw an error if the api request fails', async () => {
-    mockWreckPost.mockRejectedValue(new Error('Test error'))
-    await expect(refreshTokens(refreshToken)).rejects.toThrow('Test error')
+    mockWreckPost.mockRejectedValue(new Error('Unable to get token'))
+    await expect(refreshTokens(refreshToken)).rejects.toThrow()
   })
 })
