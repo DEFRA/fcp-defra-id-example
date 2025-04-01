@@ -3,6 +3,8 @@ import '../helpers/setup-server-mocks.js'
 
 const { createServer } = await import('../../../src/server.js')
 
+const CACHE_CONTROL_HEADER = 'cache-control'
+
 let server
 
 describe('headers', () => {
@@ -93,7 +95,7 @@ describe('headers', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.headers['cache-control']).toBe('no-cache')
+    expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-cache')
     expect(response.headers.expires).toBeUndefined()
     expect(response.headers.pragma).toBeUndefined()
   })
@@ -102,7 +104,7 @@ describe('headers', () => {
     const response = await server.inject({
       url: '/assets/gov.uk-frontend.min.css'
     })
-    expect(response.headers['cache-control']).toBe('no-cache')
+    expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-cache')
     expect(response.headers.pragma).toBeUndefined()
     expect(response.headers.expires).toBeUndefined()
   })
@@ -118,7 +120,7 @@ describe('headers', () => {
         }
       }
     })
-    expect(response.headers['cache-control']).toBe('no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0')
+    expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0')
     expect(response.headers.pragma).toBe('no-cache')
     expect(response.headers.expires).toBe('0')
   })
