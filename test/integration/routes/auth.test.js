@@ -132,7 +132,7 @@ describe('auth routes', () => {
       await bellSimulatedServer.initialize()
 
       const response = await bellSimulatedServer.inject({
-        url: `${path}?state=statecode=code`
+        url: `${path}?state=state&code=code`
       })
 
       bellSimulatedServer.stop()

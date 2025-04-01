@@ -52,7 +52,7 @@ describe('getSignOutUrl', () => {
     expect(result).toContain(`post_logout_redirect_uri=${mockSignOutRedirectUrl}`)
   })
 
-  test('should returnurl with id_token_hint token', async () => {
+  test('should return url with id_token_hint token', async () => {
     const result = await getSignOutUrl(request, token)
     expect(result).toContain(`id_token_hint=${token}`)
   })
