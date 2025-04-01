@@ -1,5 +1,8 @@
+import { constants } from 'http2'
 import { jest } from '@jest/globals'
 import { mockOidcConfig } from '../helpers/setup-server-mocks.js'
+
+const { HTTP_STATUS_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
 const mockVerifyToken = jest.fn()
 jest.unstable_mockModule('../../../src/auth/verify-token', async () => ({
@@ -76,7 +79,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/home')
     })
 
@@ -87,7 +90,7 @@ describe('auth routes', () => {
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
 
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
       expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
@@ -111,7 +114,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
     })
 
@@ -160,7 +163,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(HTTP_STATUS_INTERNAL_SERVER_ERROR)
       expect(response.request.response.source.template).toBe('500')
     })
 
@@ -187,7 +190,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(HTTP_STATUS_INTERNAL_SERVER_ERROR)
       expect(response.request.response.source.template).toBe('500')
     })
 
@@ -275,7 +278,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/home')
     })
   })
@@ -294,7 +297,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe(signOutUrl)
     })
 
@@ -302,7 +305,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/')
     })
 
@@ -318,7 +321,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(HTTP_STATUS_INTERNAL_SERVER_ERROR)
       expect(response.request.response.source.template).toBe('500')
     })
   })
@@ -353,7 +356,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(HTTP_STATUS_INTERNAL_SERVER_ERROR)
       expect(response.request.response.source.template).toBe('500')
     })
 
@@ -415,7 +418,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/')
     })
 
@@ -423,7 +426,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/')
     })
   })
@@ -441,7 +444,7 @@ describe('auth routes', () => {
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
 
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
       expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
@@ -483,7 +486,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(302)
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
       expect(response.headers.location).toBe('/home')
     })
   })

@@ -1,3 +1,6 @@
+import { constants } from 'http2'
+const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND } = constants
+
 export default {
   plugin: {
     name: 'errors',
@@ -9,11 +12,11 @@ export default {
           const statusCode = response.output.statusCode
 
           // Catch any user in incorrect scope errors
-          if (statusCode === 403) {
+          if (statusCode === HTTP_STATUS_FORBIDDEN) {
             return h.view('403').code(statusCode)
           }
 
-          if (statusCode === 404) {
+          if (statusCode === HTTP_STATUS_NOT_FOUND) {
             return h.view('404').code(statusCode)
           }
 

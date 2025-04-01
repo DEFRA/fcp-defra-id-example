@@ -1,5 +1,8 @@
+import { constants } from 'http2'
 import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
+
+const { HTTP_STATUS_OK, HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
 const { createServer } = await import('../../../src/server.js')
 
@@ -30,7 +33,7 @@ describe('errors', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(403)
+    expect(response.statusCode).toBe(HTTP_STATUS_FORBIDDEN)
     expect(response.request.response.source.template).toBe('403')
   })
 
@@ -38,7 +41,7 @@ describe('errors', () => {
     const response = await server.inject({
       url: '/non-existent-route'
     })
-    expect(response.statusCode).toBe(404)
+    expect(response.statusCode).toBe(HTTP_STATUS_NOT_FOUND)
     expect(response.request.response.source.template).toBe('404')
   })
 
@@ -50,7 +53,7 @@ describe('errors', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.statusCode).toBe(500)
+    expect(response.statusCode).toBe(HTTP_STATUS_INTERNAL_SERVER_ERROR)
     expect(response.request.response.source.template).toBe('500')
   })
 
@@ -58,6 +61,6 @@ describe('errors', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(HTTP_STATUS_OK)
   })
 })

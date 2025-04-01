@@ -1,5 +1,8 @@
+import { constants } from 'http2'
 import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
+
+const { HTTP_STATUS_OK, HTTP_STATUS_FOUND, HTTP_STATUS_FORBIDDEN } = constants
 
 const { createServer } = await import('../../../src/server.js')
 
@@ -32,7 +35,7 @@ describe('home route', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(HTTP_STATUS_OK)
     expect(response.request.response.source.template).toBe('home')
   })
 
@@ -41,7 +44,7 @@ describe('home route', () => {
       method: 'GET',
       url: '/home'
     })
-    expect(response.statusCode).toBe(302)
+    expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
     expect(response.headers.location).toBe('/auth/sign-in?redirect=/home')
   })
 
@@ -56,7 +59,7 @@ describe('home route', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(403)
+    expect(response.statusCode).toBe(HTTP_STATUS_FORBIDDEN)
     expect(response.request.response.source.template).toBe('403')
   })
 })
