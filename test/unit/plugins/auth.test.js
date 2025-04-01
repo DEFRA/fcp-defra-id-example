@@ -404,7 +404,7 @@ describe('auth', () => {
 
       test('should return invalid state if token has expired and refresh tokens are disabled', async () => {
         jwtVerifyTimeSpy.mockImplementationOnce(() => {
-          throw new Error('Invalid token')
+          throw new Error('Token has expired')
         })
         mockConfigGet.mockReturnValueOnce(false)
         const result = await validate(request, session)
@@ -413,7 +413,7 @@ describe('auth', () => {
 
       test('should refresh tokens if token is has expired and refresh tokens are enabled', async () => {
         jwtVerifyTimeSpy.mockImplementationOnce(() => {
-          throw new Error('Invalid token')
+          throw new Error('Token has expired')
         })
         await validate(request, session)
         expect(mockRefreshTokens).toHaveBeenCalledWith(refreshToken)
@@ -421,7 +421,7 @@ describe('auth', () => {
 
       test('should overwrite session data in cache if tokens are refreshed', async () => {
         jwtVerifyTimeSpy.mockImplementationOnce(() => {
-          throw new Error('Invalid token')
+          throw new Error('Token has expired')
         })
         await validate(request, session)
         expect(mockCacheSet).toHaveBeenCalledWith(session.sessionId, userSession)
@@ -429,7 +429,7 @@ describe('auth', () => {
 
       test('should return valid state if tokens are refreshed', async () => {
         jwtVerifyTimeSpy.mockImplementationOnce(() => {
-          throw new Error('Invalid token')
+          throw new Error('Token has expired')
         })
         const result = await validate(request, session)
         expect(result.isValid).toBe(true)
