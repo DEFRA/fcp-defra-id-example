@@ -8,6 +8,8 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-defra-id-example&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-defra-id-example)
 [![Known Vulnerabilities](https://snyk.io/test/github/defra/fcp-defra-id-example/badge.svg)](https://snyk.io/test/github/defra/fcp-defra-id-example)
 
+Hello!
+
 This is an example service that demonstrates how to use the Defra Identity service to authenticate users within the Farming and Countryside programme (FCP).
 
 The patterns used within this example are documented below.  Code comments are also provided to provide extra context.
