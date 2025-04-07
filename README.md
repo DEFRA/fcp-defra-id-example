@@ -43,6 +43,27 @@ The majority of farming APIs follow this concept, so FCP journey's should be bas
 
 > If a user is only associated with one organisation, the organisation selection step is automatically skipped.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant ConsumingService
+    participant DefraIdentity
+    participant SitiAgri
+
+    User->>+ConsumingService: Access service
+    ConsumingService->>+DefraIdentity: Redirect to login page
+    User->>+DefraIdentity: Log in
+    DefraIdentity->>User: Select organisation (if multiple)
+    User->>+DefraIdentity: Organisation selected
+    DefraIdentity->>-ConsumingService: Redirect back with authorization code
+    ConsumingService->>+DefraIdentity: Exchange authorization code for access token
+    DefraIdentity->>-ConsumingService: Access token
+    ConsumingService->>ConsumingService: Store JWT token in session
+    ConsumingService->>+SitiAgri: Retrieve permissions for organisation
+    SitiAgri->>-ConsumingService: Permissions
+    ConsumingService->>-User: Access granted based on permissions
+```
+
 ## FCP Development Guide
 
 The [FCP Development Guide](https://defra.github.io/ffc-development-guide/development-patterns/authentication/defra-identity/) provides more context on how to use Defra Identity and Siti Agri within FCP services.
