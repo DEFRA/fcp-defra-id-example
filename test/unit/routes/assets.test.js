@@ -22,6 +22,10 @@ describe('assets', () => {
     expect(route.options.handler.directory.path).toContain('node_modules/govuk-frontend/dist/govuk/assets')
   })
 
+  test('should return any govuk rebrand frontend asset', () => {
+    expect(route.options.handler.directory.path).toContain('node_modules/govuk-frontend/dist/govuk/assets/rebrand')
+  })
+
   test('should return any local asset', () => {
     expect(route.options.handler.directory.path).toContain('src/assets')
   })

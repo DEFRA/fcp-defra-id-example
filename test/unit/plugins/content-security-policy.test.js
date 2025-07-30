@@ -18,12 +18,12 @@ describe('contentSecurityPolicy', () => {
     expect(csp.options.imgSrc).toEqual(['self'])
   })
 
-  test('should restrict the script src to self and unsafe-inline', () => {
-    expect(csp.options.scriptSrc).toEqual(['self', 'unsafe-inline'])
+  test('should restrict the script src to self and GOV.UK hash', () => {
+    expect(csp.options.scriptSrc).toEqual(['self', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='"])
   })
 
-  test('should restrict the style src to self and unsafe-inline', () => {
-    expect(csp.options.styleSrc).toEqual(['self', 'unsafe-inline'])
+  test('should restrict the style src to self', () => {
+    expect(csp.options.styleSrc).toEqual(['self'])
   })
 
   test('should restrict the frame ancestors to self', () => {
@@ -34,7 +34,7 @@ describe('contentSecurityPolicy', () => {
     expect(csp.options.formAction).toEqual(['self'])
   })
 
-  test('should not generate nonces', () => {
-    expect(csp.options.generateNonces).toBe(false)
+  test('should generate nonces', () => {
+    expect(csp.options.generateNonces).toBe(true)
   })
 })

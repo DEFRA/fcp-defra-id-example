@@ -5,10 +5,11 @@ export default {
   options: {
     fontSrc: ['self'],
     imgSrc: ['self'],
-    scriptSrc: ['self', 'unsafe-inline'],
-    styleSrc: ['self', 'unsafe-inline'],
+    scriptSrc: ['self', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='"],
+    styleSrc: ['self'],
     frameAncestors: ['self'],
     formAction: ['self'],
-    generateNonces: false
+    manifestSrc: ['self'],
+    generateNonces: true
   }
 }

@@ -19,13 +19,17 @@ export default {
           }
         },
         prepare: (options, next) => {
-          options.compileOptions.environment = nunjucks.configure([
+          const nunjucksEnv = nunjucks.configure([
             path.join(options.relativeTo, options.path),
             'node_modules/govuk-frontend/dist'
           ], {
             autoescape: true,
             watch: config.get('isDev')
           })
+
+          nunjucksEnv.addGlobal('govukRebrand', true)
+
+          options.compileOptions.environment = nunjucksEnv
 
           return next()
         }
@@ -35,13 +39,17 @@ export default {
     relativeTo: __dirname,
     isCached: !config.get('isDev'),
     context: async function (request) {
+      const context = request.response.source.context || {}
       // If the user is authenticated, add the user's details to the view context
       // This allows the view to display the user's session details and the ability to conditionally render content
       if (!request.auth.isAuthenticated) {
         return {}
       }
       const auth = await request.server.app.cache.get(request.auth.credentials.sessionId)
-      return { auth }
+      return {
+        ...context,
+        auth
+      }
     }
   }
 }

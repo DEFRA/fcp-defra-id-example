@@ -132,6 +132,11 @@ describe('views', () => {
               get: mockCacheGet
             }
           }
+        },
+        response: {
+          source: {
+            context: {}
+          }
         }
       }
 
