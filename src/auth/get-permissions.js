@@ -19,6 +19,8 @@ async function getPermissions (crn, organisationId, token) {
 async function getPersonId (headers) {
   // simulate call to RPS API
   // Only id is needed for mapping roles, but other fields shown for context for what else is available
+  // Note that the path should always include person id 3337243, regardless of the actual person id
+  // This is a workaround for services outside of Crown Hosting where the person id is not known until this API call is made.Cl
   // PATH: /person/3337243/summary
   // METHOD: GET
   // HEADERS:
