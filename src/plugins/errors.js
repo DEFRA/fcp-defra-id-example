@@ -1,5 +1,5 @@
 import { constants } from 'http2'
-const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND } = constants
+const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
 export default {
   plugin: {
@@ -11,22 +11,33 @@ export default {
         if (response.isBoom) {
           const statusCode = response.output.statusCode
 
-          // Catch any user in incorrect scope errors
+          let template = '500'
+
           if (statusCode === HTTP_STATUS_FORBIDDEN) {
-            return h.view('403').code(statusCode)
+            template = '403'
           }
 
           if (statusCode === HTTP_STATUS_NOT_FOUND) {
-            return h.view('404').code(statusCode)
+            template = '404'
           }
 
-          request.log('error', {
-            statusCode,
-            message: response.message,
-            stack: response.data?.stack
-          })
+          if (statusCode >= HTTP_STATUS_INTERNAL_SERVER_ERROR) {
+            request.log('error', {
+              statusCode,
+              message: response.message,
+              stack: response.data?.stack
+            })
+          }
 
-          return h.view('500').code(statusCode)
+          const viewResponse = h.view(template).code(statusCode)
+
+          const originalHeaders = response.headers || response.output?.headers || {}
+          for (const [key, value] of Object.entries(originalHeaders)) {
+            if (key.toLowerCase() === 'content-type') continue
+            viewResponse.header(key, value)
+          }
+
+          return viewResponse
         }
         return h.continue
       })
