@@ -2,6 +2,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="/assets/govuk-frontend.min.css">
+<link rel="stylesheet" href="/assets/site.css">
 {% endblock %}
 
 {% block header %}
@@ -23,7 +24,7 @@
 {% block beforeContent %}
   {% if auth.isAuthenticated %}
     <div class="gov-grid-row">
-      <div style="float:right;clear:both;text-align:right;">
+      <div class="auth-info">
         <p class="govuk-body govuk-!-margin-bottom-0">Signed in as <a href="/home" class="govuk-link">{{ auth.name }}</a></p>
         <p class="govuk-body govuk-!-margin-bottom-0"><a href="/auth/organisation" class="govuk-link">Switch organisation</a></p>
         <p class="govuk-body govuk-!-margin-bottom-0"><a href="/auth/sign-out" class="govuk-link">Sign out</a></p>
