@@ -16,7 +16,10 @@ services:
     networks:
       - fcp-defra-id-example
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+      fcp-defra-id-stub:
+        condition: service_healthy
 
   redis:
     ports:
