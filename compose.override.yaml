@@ -27,6 +27,14 @@ services:
     networks:
       - fcp-defra-id-example
 
+  fcp-defra-id-stub:
+    ports:
+      - "3008:3008"
+    networks:
+      - fcp-defra-id-example
+    volumes:
+      - ./example.data.json:/data/example.data.json
+
 networks:
   fcp-defra-id-example:
     name: fcp-defra-id-example

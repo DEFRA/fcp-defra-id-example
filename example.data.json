@@ -1,0 +1,43 @@
+{
+  "people": [
+    {
+      "crn": 3100010101,
+      "firstName": "Julie",
+      "lastName": "Barnes",
+      "organisations": [
+        {
+          "organisationId": "5900001",
+          "sbi": 210100101,
+          "name": "Sheep Every Day"
+        },
+        {
+          "organisationId": "5900002",
+          "sbi": 210100102,
+          "name": "Beetles"
+        },
+        {
+          "organisationId": "5900003",
+          "sbi": 210100103,
+          "name": "A & F Land Management"
+        }
+      ]
+    },
+    {
+      "crn": 3100010102,
+      "firstName": "Glen",
+      "lastName": "Adams",
+      "organisations": [
+        {
+          "organisationId": "5900001",
+          "sbi": 210100101,
+          "name": "Sheep Every Day"
+        },
+        {
+          "organisationId": "5900002",
+          "sbi": 210100103,
+          "name": "Glen Adams"
+        }
+      ]
+    }
+  ]
+}

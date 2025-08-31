@@ -82,6 +82,16 @@ Before you can use Defra Identity, you will need to onboard your service with th
 
 > To support Single Sign On (SSO) with other services, all FCP services should use the same policy.
 
+#### FCP Defra ID stub
+
+If you are not yet onboarded to Defra Identity or you want to run your application/tests against a stub version, an FCP Defra ID stub has been created.
+
+Unlike other Defra Identity stubs, this supports authentication with the RPA CRN/Password account.
+
+Full details for using the stub can be found in the [FCP Defra ID stub repository](https://github.com/DEFRA/fcp-defra-id-stub).
+
+This repository includes setup of the stub in the Docker Compose files for an example of use.
+
 ### Environment variables
 
 Once you have your Defra Identity service credentials, you will need to add them to a `.env` file in the root of the project.
