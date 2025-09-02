@@ -107,7 +107,7 @@ function getCookieOptions () {
       try {
         const decoded = Jwt.token.decode(userSession.token)
         Jwt.token.verifyTime(decoded)
-      } catch (error) {
+      } catch {
         if (!config.get('defraId.refreshTokens')) {
           return { isValid: false }
         }
