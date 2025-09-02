@@ -63,4 +63,25 @@ describe('errors', () => {
     })
     expect(response.statusCode).toBe(HTTP_STATUS_OK)
   })
+
+  test('should preserve security headers if error', async () => {
+    server.ext('onRequest', (_request, _h) => {
+      throw new Error('Internal Server Error')
+    })
+
+    const response = await server.inject({
+      url: '/'
+    })
+    expect(response.headers['x-content-type-options']).toBeDefined()
+    expect(response.headers['x-frame-options']).toBeDefined()
+    expect(response.headers['x-robots-tag']).toBeDefined()
+    expect(response.headers['x-xss-protection']).toBeDefined()
+    expect(response.headers['cross-origin-opener-policy']).toBeDefined()
+    expect(response.headers['cross-origin-embedder-policy']).toBeDefined()
+    expect(response.headers['cross-origin-resource-policy']).toBeDefined()
+    expect(response.headers['referrer-policy']).toBeDefined()
+    expect(response.headers['strict-transport-security']).toBeDefined()
+    expect(response.headers['permissions-policy']).toBeDefined()
+    expect(response.headers['content-security-policy']).toBeDefined()
+  })
 })
