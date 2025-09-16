@@ -106,7 +106,8 @@ function getCookieOptions () {
       // Verify Defra Identity token has not expired
       try {
         const decoded = Jwt.token.decode(userSession.token)
-        Jwt.token.verifyTime(decoded)
+        // Allow 60 second tolerance for clock skew between servers
+        Jwt.token.verifyTime(decoded, { timeSkewSec: 60 })
       } catch {
         if (!config.get('defraId.refreshTokens')) {
           return { isValid: false }
