@@ -22,7 +22,7 @@ export default {
           }
 
           if (statusCode >= HTTP_STATUS_INTERNAL_SERVER_ERROR) {
-            request.log('error', {
+            request.log(['error'], {
               statusCode,
               message: response.message,
               stack: response.data?.stack
