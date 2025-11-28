@@ -64,11 +64,21 @@ export default [{
     auth: { mode: 'try' }
   },
   handler: async function (request, h) {
-    if (!request.auth.isAuthenticated) {
-      return h.redirect('/')
+    if (request.auth.isAuthenticated) {
+      if (request.auth.credentials?.sessionId) {
+        // Clear the session cache before redirecting to Defra ID to clear SSO session
+        await request.server.app.cache.drop(request.auth.credentials.sessionId)
+      }
+
+      // Clear local session cookie
+      request.cookieAuth.clear()
+
+      const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
+      return h.redirect(signOutUrl)
     }
-    const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
-    return h.redirect(signOutUrl)
+
+    // If not authenticated just redirect to home page
+    return h.redirect('/')
   }
 }, {
   method: 'GET',
@@ -78,13 +88,19 @@ export default [{
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
+      // verify state parameter to prevent CSRF attacks
       validateState(request, request.query.state)
+
+      // Clear session as a fail safe as should already be cleared in /auth/sign-out
       if (request.auth.credentials?.sessionId) {
         // Clear the session cache
         await request.server.app.cache.drop(request.auth.credentials.sessionId)
       }
+
+      // Clear local session cookie as fail safe as should already be cleared in /auth/sign-out
       request.cookieAuth.clear()
     }
+
     return h.redirect('/')
   }
 }, {
