@@ -1,5 +1,5 @@
 function getSafeRedirect (redirect) {
-  if (!redirect?.startsWith('/')) {
+  if (!redirect?.startsWith('/') || redirect.startsWith('//')) {
     return '/home'
   }
   return redirect
