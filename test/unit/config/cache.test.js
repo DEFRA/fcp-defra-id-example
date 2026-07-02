@@ -20,7 +20,7 @@ describe('cache config', () => {
 
   test('should throw error if host environment variable is not set', async () => {
     delete process.env.REDIS_HOST
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/cache.js')
     }).rejects.toThrow()
   })
@@ -50,7 +50,7 @@ describe('cache config', () => {
   test('should throw error if password environment variable is not set and environment is production', async () => {
     process.env.NODE_ENV = 'production'
     delete process.env.REDIS_PASSWORD
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/cache.js')
     }).rejects.toThrow()
   })

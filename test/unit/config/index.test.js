@@ -50,7 +50,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if cookie password environment variable is not set', async () => {
     delete process.env.COOKIE_PASSWORD
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/index.js')
     }).rejects.toThrow()
   })

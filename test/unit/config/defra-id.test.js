@@ -18,7 +18,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if well known url environment variable is not set', async () => {
     delete process.env.DEFRA_ID_WELL_KNOWN_URL
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -30,7 +30,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if client id environment variable is not set', async () => {
     delete process.env.DEFRA_ID_CLIENT_ID
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -42,7 +42,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if client secret environment variable is not set', async () => {
     delete process.env.DEFRA_ID_CLIENT_SECRET
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -54,7 +54,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if service id environment variable is not set', async () => {
     delete process.env.DEFRA_ID_SERVICE_ID
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -66,7 +66,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if policy environment variable is not set', async () => {
     delete process.env.DEFRA_ID_POLICY
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -78,7 +78,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if redirect url environment variable is not set', async () => {
     delete process.env.DEFRA_ID_REDIRECT_URL
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
@@ -90,7 +90,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if sign out redirect url environment variable is not set', async () => {
     delete process.env.DEFRA_ID_SIGN_OUT_REDIRECT_URL
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/defra-id.js')
     }).rejects.toThrow()
   })
