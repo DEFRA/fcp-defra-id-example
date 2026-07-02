@@ -1,5 +1,4 @@
 import { constants } from 'http2'
-import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK } = constants
@@ -10,7 +9,7 @@ let server
 
 describe('index route', () => {
   beforeAll(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     server = await createServer()
     await server.initialize()

@@ -1,10 +1,9 @@
-import { jest } from '@jest/globals'
 import defraId from '../../../src/config/defra-id.js'
 import cache from '../../../src/config/cache.js'
 
 describe('Defra Identity config', () => {
   beforeEach(() => {
-    jest.resetModules()
+    vi.resetModules()
     process.env.NODE_ENV = 'test'
     process.env.HOST = '127.0.0.1'
     process.env.PORT = 4000
@@ -51,7 +50,7 @@ describe('Defra Identity config', () => {
 
   test('should throw error if cookie password environment variable is not set', async () => {
     delete process.env.COOKIE_PASSWORD
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/index.js')
     }).rejects.toThrow()
   })

@@ -1,31 +1,30 @@
 import { constants } from 'http2'
-import { jest } from '@jest/globals'
 import { mockOidcConfig } from '../helpers/setup-server-mocks.js'
 
 const { HTTP_STATUS_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
-const mockVerifyToken = jest.fn()
-jest.unstable_mockModule('../../../src/auth/verify-token', async () => ({
+const mockVerifyToken = vi.fn()
+vi.mock('../../../src/auth/verify-token', async () => ({
   verifyToken: mockVerifyToken
 }))
 
-const mockGetPermissions = jest.fn()
-jest.unstable_mockModule('../../../src/auth/get-permissions.js', async () => ({
+const mockGetPermissions = vi.fn()
+vi.mock('../../../src/auth/get-permissions.js', async () => ({
   getPermissions: mockGetPermissions
 }))
 
-const mockGetSafeRedirect = jest.fn()
-jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
+const mockGetSafeRedirect = vi.fn()
+vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
   getSafeRedirect: mockGetSafeRedirect
 }))
 
-const mockGetSignOutUrl = jest.fn()
-jest.unstable_mockModule('../../../src/auth/get-sign-out-url.js', () => ({
+const mockGetSignOutUrl = vi.fn()
+vi.mock('../../../src/auth/get-sign-out-url.js', () => ({
   getSignOutUrl: mockGetSignOutUrl
 }))
 
-const mockValidateState = jest.fn()
-jest.unstable_mockModule('../../../src/auth/state.js', () => ({
+const mockValidateState = vi.fn()
+vi.mock('../../../src/auth/state.js', () => ({
   validateState: mockValidateState
 }))
 
@@ -52,7 +51,7 @@ let path
 
 describe('auth routes', () => {
   beforeAll(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     mockGetSafeRedirect.mockReturnValue('/home')
 
@@ -328,7 +327,7 @@ describe('auth routes', () => {
 
   describe('GET /auth/sign-out-oidc', () => {
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
       path = '/auth/sign-out-oidc'
     })
 

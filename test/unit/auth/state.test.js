@@ -1,11 +1,10 @@
 import crypto from 'crypto'
-import { jest } from '@jest/globals'
 
-const cryptoSpy = jest.spyOn(crypto, 'randomUUID')
+const cryptoSpy = vi.spyOn(crypto, 'randomUUID')
 
-const mockSet = jest.fn()
-const mockGet = jest.fn()
-const mockClear = jest.fn()
+const mockSet = vi.fn()
+const mockGet = vi.fn()
+const mockClear = vi.fn()
 
 const mockRequest = { yar: { set: mockSet, get: mockGet, clear: mockClear } }
 let mockState
@@ -13,7 +12,7 @@ let mockState
 const { createState, validateState } = await import('../../../src/auth/state.js')
 
 beforeEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 describe('createState', () => {

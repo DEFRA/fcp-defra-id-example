@@ -2,8 +2,8 @@ node_modules
 Dockerfile
 .dockerignore
 compose*
-.secrets.baseline
-.pre-commit-config.yaml
+coverage
+**/*.test.js
 LICENCE
 README.md
 .vscode

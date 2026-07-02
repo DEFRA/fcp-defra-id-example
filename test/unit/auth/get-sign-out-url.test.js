@@ -1,19 +1,17 @@
-import { jest } from '@jest/globals'
-
 const mockOidcConfig = { end_session_endpoint: 'https://example.com/sign-out' }
-const mockGetOidcConfig = jest.fn()
-jest.unstable_mockModule('../../../src/auth/get-oidc-config.js', () => ({
+const mockGetOidcConfig = vi.fn()
+vi.mock('../../../src/auth/get-oidc-config.js', () => ({
   getOidcConfig: mockGetOidcConfig
 }))
 
-const mockCreateState = jest.fn()
-jest.unstable_mockModule('../../../src/auth/state.js', () => ({
+const mockCreateState = vi.fn()
+vi.mock('../../../src/auth/state.js', () => ({
   createState: mockCreateState
 }))
 
 const mockSignOutRedirectUrl = 'https://example.com/sign-out-redirect'
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
@@ -26,7 +24,7 @@ const token = 'DEFRA-ID-JWT'
 
 describe('getSignOutUrl', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockGetOidcConfig.mockResolvedValue(mockOidcConfig)
     mockConfigGet.mockReturnValue(mockSignOutRedirectUrl)
     mockCreateState.mockReturnValue('mock-state')

@@ -1,5 +1,4 @@
 import { constants } from 'http2'
-import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK, HTTP_STATUS_FOUND, HTTP_STATUS_FORBIDDEN } = constants
@@ -12,7 +11,7 @@ const path = '/home'
 
 describe('home route', () => {
   beforeAll(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     server = await createServer()
     await server.initialize()

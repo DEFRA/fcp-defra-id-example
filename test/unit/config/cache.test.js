@@ -1,8 +1,6 @@
-import { jest } from '@jest/globals'
-
 describe('cache config', () => {
   beforeEach(() => {
-    jest.resetModules()
+    vi.resetModules()
     process.env.NODE_ENV = 'test'
     process.env.REDIS_HOST = 'mockHost'
     process.env.REDIS_PORT = 6000
@@ -22,7 +20,7 @@ describe('cache config', () => {
 
   test('should throw error if host environment variable is not set', async () => {
     delete process.env.REDIS_HOST
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/cache.js')
     }).rejects.toThrow()
   })
@@ -52,7 +50,7 @@ describe('cache config', () => {
   test('should throw error if password environment variable is not set and environment is production', async () => {
     process.env.NODE_ENV = 'production'
     delete process.env.REDIS_PASSWORD
-    expect(async () => {
+    await expect(async () => {
       await import('../../../src/config/cache.js')
     }).rejects.toThrow()
   })

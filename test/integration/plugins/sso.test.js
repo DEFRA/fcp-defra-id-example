@@ -1,5 +1,4 @@
 import { constants } from 'http2'
-import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
 
 const { HTTP_STATUS_FOUND } = constants
@@ -12,7 +11,7 @@ let server
 
 describe('sso', () => {
   beforeAll(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     server = await createServer()
     await server.initialize()

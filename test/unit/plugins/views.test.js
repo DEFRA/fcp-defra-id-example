@@ -1,20 +1,19 @@
-import { jest } from '@jest/globals'
 import Vision from '@hapi/vision'
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
 }))
 
-const mockCacheGet = jest.fn()
+const mockCacheGet = vi.fn()
 
 let views
 
 describe('views', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConfigGet.mockReturnValue(true)
     views = await import('../../../src/plugins/views.js')
   })
@@ -52,7 +51,7 @@ describe('views', () => {
   })
 
   test('should cache templates if not in development', async () => {
-    jest.resetModules()
+    vi.resetModules()
     mockConfigGet.mockReturnValue(false)
     views = await import('../../../src/plugins/views.js')
     expect(views.default.options.isCached).toBe(true)
@@ -90,7 +89,7 @@ describe('views', () => {
       path: 'path/to/views',
       compileOptions: {}
     }
-    const next = jest.fn()
+    const next = vi.fn()
 
     let prepare
 

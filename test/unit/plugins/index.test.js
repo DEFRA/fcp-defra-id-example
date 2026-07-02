@@ -1,4 +1,3 @@
-import { jest } from '@jest/globals'
 import Inert from '@hapi/inert'
 import Crumb from '@hapi/crumb'
 import Bell from '@hapi/bell'
@@ -15,14 +14,14 @@ import router from '../../../src/plugins/router.js'
 import sso from '../../../src/plugins/sso.js'
 import { registerPlugins } from '../../../src/plugins/index.js'
 
-const mockRegister = jest.fn()
+const mockRegister = vi.fn()
 const mockServer = {
   register: mockRegister
 }
 
 describe('registerPlugins', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should register an array of plugins', async () => {

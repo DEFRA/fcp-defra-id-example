@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Services: Up",
+      "detail": "Start dependency containers (Redis + Defra ID stub)",
+      "type": "npm",
+      "script": "services:up",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Services: Down",
+      "detail": "Stop dependency containers",
+      "type": "npm",
+      "script": "services:down",
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev",
+      "detail": "Run app locally with hot reload (requires Services: Up)",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Test",
+      "detail": "Run all tests once with coverage",
+      "type": "npm",
+      "script": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test (watch)",
+      "detail": "Run tests in watch mode",
+      "type": "npm",
+      "script": "test:watch",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Dev (together)",
+      "detail": "Build and run in Docker (use with the orchestration repo)",
+      "type": "npm",
+      "script": "docker:dev",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

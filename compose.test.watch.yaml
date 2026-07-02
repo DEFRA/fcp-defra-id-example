@@ -1,6 +1,0 @@
-services:
-  fcp-defra-id-example:
-    command: >
-      sh -c "npm run test:watch"
-    volumes:
-      - ./.git:/home/node/.git

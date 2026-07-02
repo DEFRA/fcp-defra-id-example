@@ -1,5 +1,4 @@
 import { constants } from 'http2'
-import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK, HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
@@ -10,7 +9,7 @@ let server
 
 describe('errors', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     server = await createServer()
     await server.initialize()

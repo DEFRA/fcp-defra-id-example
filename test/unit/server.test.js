@@ -1,26 +1,25 @@
-import { jest } from '@jest/globals'
 import Hapi from '@hapi/hapi'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 
-const mockRegisterPlugins = jest.fn()
-jest.unstable_mockModule('../../src/plugins/index.js', () => ({
+const mockRegisterPlugins = vi.fn()
+vi.mock('../../src/plugins/index.js', () => ({
   registerPlugins: mockRegisterPlugins
 }))
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
 }))
 
-const hapiSpy = jest.spyOn(Hapi, 'server')
+const hapiSpy = vi.spyOn(Hapi, 'server')
 
 const { createServer } = await import('../../src/server.js')
 
 describe('hapi server', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConfigGet.mockImplementation((key) => {
       switch (key) {
         case 'host':

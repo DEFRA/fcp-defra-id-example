@@ -1,31 +1,68 @@
 services:
   fcp-defra-id-example:
+    profiles:
+      - app
     build:
       context: .
-      target: production
+      target: development
     image: fcp-defra-id-example
     container_name: fcp-defra-id-example
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - ./src:/home/node/src
+      - ./package.json:/home/node/package.json
+    env_file:
+      - .env
     environment:
-      DEFRA_ID_WELL_KNOWN_URL: ${DEFRA_ID_WELL_KNOWN_URL}
-      DEFRA_ID_CLIENT_ID: ${DEFRA_ID_CLIENT_ID}
-      DEFRA_ID_CLIENT_SECRET: ${DEFRA_ID_CLIENT_SECRET}
-      DEFRA_ID_SERVICE_ID: ${DEFRA_ID_SERVICE_ID}
-      DEFRA_ID_POLICY: ${DEFRA_ID_POLICY}
-      DEFRA_ID_REDIRECT_URL: http://localhost:3000/auth/sign-in-oidc
-      DEFRA_ID_SIGN_OUT_REDIRECT_URL: http://localhost:3000/auth/sign-out-oidc
       REDIS_HOST: redis
-      COOKIE_PASSWORD: this-is-a-secret-that-must-be-at-least-32-characters
+      DEFRA_ID_WELL_KNOWN_URL: http://fcp-defra-id-stub:3008/.well-known/openid-configuration
+    networks:
+      - fcp-defra-id-example
+    depends_on:
+      redis:
+        condition: service_healthy
+      fcp-defra-id-stub:
+        condition: service_healthy
 
   redis:
     image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --dir /data --save 5 1
+    networks:
+      - fcp-defra-id-example
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub
+    ports:
+      - "3008:3008"
+    environment:
+      PORT: 3008
+    volumes:
+      - ./example.data.json:/data/example.data.json
+    networks:
+      - fcp-defra-id-example
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3008/health"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 3s
-    environment:
-      PORT: 3008
+
+networks:
+  fcp-defra-id-example:
+    name: fcp-defra-id-example
+    driver: bridge
+
+volumes:
+  redis_data:
+

@@ -1,8 +1,7 @@
-import { jest } from '@jest/globals'
 import Yar from '@hapi/yar'
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
@@ -12,7 +11,7 @@ let session
 
 describe('session', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConfigGet.mockImplementation((key) => {
       switch (key) {
         case 'cache.name':
@@ -63,7 +62,7 @@ describe('session', () => {
   })
 
   test('should set secure cookie if not in development', async () => {
-    jest.resetModules()
+    vi.resetModules()
     mockConfigGet.mockReturnValue(false)
     session = await import('../../../src/plugins/session.js')
     expect(session.default.options.cookieOptions.isSecure).toBe(true)
