@@ -1,21 +1,19 @@
-import { jest } from '@jest/globals'
-
 const mockOidcConfig = { token_endpoint: 'https://example.com/token' }
-const mockGetOidcConfig = jest.fn()
-jest.unstable_mockModule('../../../src/auth/get-oidc-config.js', () => ({
+const mockGetOidcConfig = vi.fn()
+vi.mock('../../../src/auth/get-oidc-config.js', () => ({
   getOidcConfig: mockGetOidcConfig
 }))
 
-const mockWreckPost = jest.fn()
+const mockWreckPost = vi.fn()
 const mockTokenPayload = { access_token: 'DEFRA_ID_JWT', refresh_token: 'DEFRA_ID_REFRESH_TOKEN_NEW' }
-jest.unstable_mockModule('@hapi/wreck', () => ({
+vi.mock('@hapi/wreck', () => ({
   default: {
     post: mockWreckPost
   }
 }))
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
@@ -27,7 +25,7 @@ const refreshToken = 'DEFRA_ID_REFRESH_TOKEN'
 
 describe('refreshTokens', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockGetOidcConfig.mockResolvedValue(mockOidcConfig)
     mockWreckPost.mockResolvedValue({ payload: mockTokenPayload })
     mockConfigGet.mockImplementation((key) => {

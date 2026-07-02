@@ -1,15 +1,14 @@
 import { generateKeyPairSync } from 'crypto'
-import { jest } from '@jest/globals'
 import Jwt from '@hapi/jwt'
 
 const mockOidcConfig = { jwks_uri: 'https://example.com/jwks_uri' }
-const mockGetOidcConfig = jest.fn()
-jest.unstable_mockModule('../../../src/auth/get-oidc-config.js', () => ({
+const mockGetOidcConfig = vi.fn()
+vi.mock('../../../src/auth/get-oidc-config.js', () => ({
   getOidcConfig: mockGetOidcConfig
 }))
 
-const mockWreckGet = jest.fn()
-jest.unstable_mockModule('@hapi/wreck', () => ({
+const mockWreckGet = vi.fn()
+vi.mock('@hapi/wreck', () => ({
   default: {
     get: mockWreckGet
   }
@@ -35,7 +34,7 @@ const { verifyToken } = await import('../../../src/auth/verify-token.js')
 
 describe('createState', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockGetOidcConfig.mockResolvedValue(mockOidcConfig)
     mockWreckGet.mockResolvedValue({ payload: mockPayload })
   })

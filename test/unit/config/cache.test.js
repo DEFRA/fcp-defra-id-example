@@ -1,8 +1,6 @@
-import { jest } from '@jest/globals'
-
 describe('cache config', () => {
   beforeEach(() => {
-    jest.resetModules()
+    vi.resetModules()
     process.env.NODE_ENV = 'test'
     process.env.REDIS_HOST = 'mockHost'
     process.env.REDIS_PORT = 6000

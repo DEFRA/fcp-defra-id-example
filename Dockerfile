@@ -1,11 +1,10 @@
-ARG PARENT_VERSION=3.0.8-node24.15.0
+ARG PARENT_VERSION=3.1.1-node24.18.0
 ARG PORT=3000
 ARG PORT_DEBUG=9229
 
-# Development
 FROM defradigital/node-development:${PARENT_VERSION} AS development
-ARG PARENT_VERSION
-LABEL uk.gov.defra.ffc.parent-image=defradigital/node-development:${PARENT_VERSION}
+
+ENV TZ="Europe/London"
 
 ARG PORT
 ARG PORT_DEBUG
@@ -13,20 +12,31 @@ ENV PORT=${PORT}
 EXPOSE ${PORT} ${PORT_DEBUG}
 
 COPY --chown=node:node package*.json ./
-RUN npm install --ignore-scripts
+RUN npm ci
 COPY --chown=node:node . .
-CMD [ "npm", "run", "start:watch" ]
 
-# Production
+CMD [ "npm", "run", "dev" ]
+
 FROM defradigital/node:${PARENT_VERSION} AS production
-ARG PARENT_VERSION
-LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
+
+ENV TZ="Europe/London"
+
+# CDP PLATFORM HEALTHCHECK REQUIREMENT
+USER root
+RUN apk add --no-cache curl
+
+COPY --from=development --chown=root:root /home/node/package*.json ./
+COPY --from=development --chown=root:root /home/node/src ./src/
+
+RUN npm ci --omit=dev
+
+# Remove write permissions
+RUN chmod -R a-w /home/node
+
+USER node
 
 ARG PORT
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-COPY --from=development /home/node/src/ ./src/
-COPY --from=development /home/node/package*.json ./
-RUN npm ci --ignore-scripts
 CMD [ "node", "src" ]

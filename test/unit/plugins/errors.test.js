@@ -1,4 +1,3 @@
-import { jest } from '@jest/globals'
 import errors from '../../../src/plugins/errors.js'
 
 describe('errors', () => {
@@ -22,20 +21,20 @@ describe('errors', () => {
     let errorHandler
 
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
 
       mockViewResponse = {
-        code: jest.fn().mockReturnThis(),
-        header: jest.fn().mockReturnThis()
+        code: vi.fn().mockReturnThis(),
+        header: vi.fn().mockReturnThis()
       }
 
       mockH = {
-        view: jest.fn().mockReturnValue(mockViewResponse),
+        view: vi.fn().mockReturnValue(mockViewResponse),
         continue: Symbol('continue')
       }
 
       mockRequest = {
-        log: jest.fn(),
+        log: vi.fn(),
         response: {
           isBoom: true,
           output: { statusCode: 500 },
@@ -48,7 +47,7 @@ describe('errors', () => {
       }
 
       mockServer = {
-        ext: jest.fn().mockImplementation((event, handler) => {
+        ext: vi.fn().mockImplementation((event, handler) => {
           if (event === 'onPreResponse') {
             errorHandler = handler
           }

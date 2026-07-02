@@ -1,15 +1,13 @@
-import { jest } from '@jest/globals'
-
-const mockStart = jest.fn()
-jest.unstable_mockModule('../../src/server.js', () => ({
-  createServer: jest.fn(() => ({
+const mockStart = vi.fn()
+vi.mock('../../src/server.js', () => ({
+  createServer: vi.fn(() => ({
     start: mockStart
   }))
 }))
 
 describe('start up', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     await import('../../src/index.js')
   })
 

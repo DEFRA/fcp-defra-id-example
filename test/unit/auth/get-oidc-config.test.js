@@ -1,17 +1,15 @@
-import { jest } from '@jest/globals'
-
 const mockPayload = { authorization_endpoint: 'https://example.com/auth' }
 const mockWellKnownUrl = 'https://example.com/.well-known/openid-configuration'
 
-const mockWreckGet = jest.fn()
-jest.unstable_mockModule('@hapi/wreck', () => ({
+const mockWreckGet = vi.fn()
+vi.mock('@hapi/wreck', () => ({
   default: {
     get: mockWreckGet
   }
 }))
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
@@ -21,7 +19,7 @@ const { getOidcConfig } = await import('../../../src/auth/get-oidc-config.js')
 
 describe('getOidcConfig', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConfigGet.mockReturnValue(mockWellKnownUrl)
     mockWreckGet.mockResolvedValue({ payload: mockPayload })
   })

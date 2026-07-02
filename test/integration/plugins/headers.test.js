@@ -1,4 +1,3 @@
-import { jest } from '@jest/globals'
 import '../helpers/setup-server-mocks.js'
 
 const { createServer } = await import('../../../src/server.js')
@@ -9,7 +8,7 @@ let server
 
 describe('headers', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     server = await createServer()
     await server.initialize()

@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dev: run server",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--env-file-if-exists=.env",
+        "--watch",
+        "--watch-path=./src",
+        "--inspect"
+      ],
+      "env": { "NODE_ENV": "development" },
+      "program": "${workspaceFolder}/src/index.js",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug current test",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/vitest",
+      "runtimeArgs": ["run", "--inspect", "--no-file-parallelism", "${relativeFile}"],
+      "env": { "TZ": "UTC", "NODE_ENV": "test" },
+      "skipFiles": ["<node_internals>/**"],
+      "smartStep": true
+    },
+    {
+      "name": "Docker: Attach to App (together)",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 9229,
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/home/node",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

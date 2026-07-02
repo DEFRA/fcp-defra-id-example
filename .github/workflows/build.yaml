@@ -25,14 +25,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-    - name: Create test output directory
-      run: mkdir -p -m 777 test-output
-    
+    - name: Setup Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version-file: .nvmrc
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run lint
+      run: npm run lint
+
     - name: Run tests
-      run: npm run docker:test
+      run: npm test
 
     - name: Update coverage paths
-      run: sed -i -e 's|/home/node|.|g' ./test-output/lcov.info
+      run: sed -i -e 's|/home/node|.|g' ./coverage/lcov.info
 
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6

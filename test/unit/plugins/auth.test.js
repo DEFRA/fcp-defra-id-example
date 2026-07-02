@@ -1,25 +1,24 @@
 import { generateKeyPairSync } from 'crypto'
-import { jest } from '@jest/globals'
 import { mockOidcConfig } from '../../integration/helpers/setup-server-mocks.js'
 import Jwt from '@hapi/jwt'
 
-const jwtDecodeSpy = jest.spyOn(Jwt.token, 'decode')
-const jwtVerifyTimeSpy = jest.spyOn(Jwt.token, 'verifyTime')
+const jwtDecodeSpy = vi.spyOn(Jwt.token, 'decode')
+const jwtVerifyTimeSpy = vi.spyOn(Jwt.token, 'verifyTime')
 
-const mockConfigGet = jest.fn()
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
   default: {
     get: mockConfigGet
   }
 }))
 
-const mockGetSafeRedirect = jest.fn()
-jest.unstable_mockModule('../../../src/utils/get-safe-redirect.js', () => ({
+const mockGetSafeRedirect = vi.fn()
+vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
   getSafeRedirect: mockGetSafeRedirect
 }))
 
-const mockRefreshTokens = jest.fn()
-jest.unstable_mockModule('../../../src/auth/refresh-tokens.js', () => ({
+const mockRefreshTokens = vi.fn()
+vi.mock('../../../src/auth/refresh-tokens.js', () => ({
   refreshTokens: mockRefreshTokens
 }))
 
@@ -49,7 +48,7 @@ const { default: auth, getBellOptions, getCookieOptions } = await import('../../
 
 describe('auth', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConfigGet.mockImplementation((key) => {
       switch (key) {
         case 'defraId.clientId':
@@ -120,12 +119,12 @@ describe('auth', () => {
       let request
 
       beforeEach(() => {
-        jest.clearAllMocks()
+        vi.clearAllMocks()
         mockGetSafeRedirect.mockReturnValue('/home')
         request = {
           query: {},
           yar: {
-            set: jest.fn()
+            set: vi.fn()
           }
         }
       })
@@ -229,7 +228,7 @@ describe('auth', () => {
         let encodedToken
 
         beforeEach(() => {
-          jest.clearAllMocks()
+          vi.clearAllMocks()
           encodedToken = Jwt.token.generate(token, { key: privateKey, algorithm: 'RS256' })
           credentials = { token: encodedToken }
         })
@@ -329,8 +328,8 @@ describe('auth', () => {
 
     describe('validate', () => {
       const validate = getCookieOptions().validate
-      const mockCacheGet = jest.fn()
-      const mockCacheSet = jest.fn()
+      const mockCacheGet = vi.fn()
+      const mockCacheSet = vi.fn()
       const request = {
         server: {
           app: {
@@ -349,7 +348,7 @@ describe('auth', () => {
       let userSession
 
       beforeEach(() => {
-        jest.clearAllMocks()
+        vi.clearAllMocks()
         const encodedToken = Jwt.token.generate(token, { key: privateKey, algorithm: 'RS256' })
         session.token = encodedToken
 
