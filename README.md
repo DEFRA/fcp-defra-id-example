@@ -70,8 +70,8 @@ The [FCP Development Guide](https://defra.github.io/ffc-development-guide/develo
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- Node.js 24 (use [nvm](https://github.com/nvm-sh/nvm): `nvm install && nvm use`)
+- Docker (for local dependency containers and integration tests)
 
 ### Defra Identity onboarding
 
@@ -94,46 +94,86 @@ This repository includes setup of the stub in the Docker Compose files for an ex
 
 ### Environment variables
 
-Once you have your Defra Identity service credentials, you will need to add them to a `.env` file in the root of the project.
+Copy `.env.example` to `.env` and fill in your Defra Identity credentials:
 
 ```bash
-DEFRA_ID_WELL_KNOWN_URL
-DEFRA_ID_CLIENT_ID
-DEFRA_ID_CLIENT_SECRET
-DEFRA_ID_SERVICE
-DEFRA_ID_POLICY
+cp .env.example .env
 ```
 
-## Running the application
-
-The application is designed to run in containerised environments.  Before running the application, you will need to build the Docker image.
+Key variables:
 
 ```bash
-docker compose build
+DEFRA_ID_WELL_KNOWN_URL   # e.g. http://localhost:3008/.well-known/openid-configuration (stub)
+DEFRA_ID_CLIENT_ID
+DEFRA_ID_CLIENT_SECRET
+DEFRA_ID_SERVICE_ID
+DEFRA_ID_POLICY
+COOKIE_PASSWORD           # must be at least 32 characters
+USE_SINGLE_INSTANCE_CACHE=true
+```
+
+## Local development
+
+### First-time setup
+
+```bash
+nvm install && nvm use   # switch to Node 24
+npm install
+cp .env.example .env     # then fill in credentials
 ```
 
 ### Start
 
-Use Docker Compose to run service locally.
+Start dependency containers (Redis + Defra ID stub) and the application with hot reload:
 
 ```bash
-docker compose up
+npm run local
 ```
+
+Or separately:
+
+```bash
+npm run services:up   # starts Redis + fcp-defra-id-stub
+npm run dev           # starts the app with node --watch
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
 
 ### Running tests
 
-Convenience scripts have been provided to run automated tests in a containerised
-environment. 
+Tests run directly on the host. Integration tests use [Testcontainers](https://testcontainers.com/) to spin up a real Redis automatically — no manual `services:up` needed.
 
 ```bash
-# Run all tests
-npm run docker:test
+# Run all tests (unit + integration) with coverage
+npm test
 
-# Run tests with file watch
-npm run docker:test:watch
+# Run unit tests only (no containers needed)
+npm run test:unit
 
-# Debug tests
-npm run docker:test:debug
+# Run integration tests only
+npm run test:integration
+
+# Watch mode
+npm run test:watch
+```
+
+### Lint
+
+```bash
+npm run lint
+npm run lint:fix
+```
+
+## Running in Docker
+
+For full-stack orchestration (e.g. journey tests or running alongside other services):
+
+```bash
+# Build the app image
+npm run docker:build
+
+# Start the full stack (app + Redis + stub)
+npm run docker:dev
 ```
 
 ## Patterns
