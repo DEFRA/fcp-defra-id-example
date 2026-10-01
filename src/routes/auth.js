@@ -20,9 +20,11 @@ export default [{
     auth: { strategy: 'defra-id', mode: 'try' }
   },
   handler: async function (request, h) {
-    // If the user is not authenticated, redirect to the home page
-    // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
+    // If the user is not authenticated, redirect to an error page
+    // This typically occurs if the user tries to access the sign-in page directly and not part of the sign-in flow
     // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back in the browser
+    // It can also occur if there is a problem with the authentication flow, in this case the `request.auth.error` property will contain details about the error
+    // and can be used to determine more sophisticated error handling strategies
     if (!request.auth.isAuthenticated) {
       return h.view('unauthorised')
     }
@@ -67,6 +69,7 @@ export default [{
     if (request.auth.isAuthenticated) {
       if (request.auth.credentials?.sessionId) {
         // Clear the session cache before redirecting to Defra ID to clear SSO session
+        // This ensures that the user is signed out of this service even if there is a failure with ending the SSO session
         await request.server.app.cache.drop(request.auth.credentials.sessionId)
       }
 
